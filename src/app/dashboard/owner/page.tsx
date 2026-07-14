@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function OwnerDashboard() {
   return (
     <div className="min-h-screen bg-zinc-50 p-8 sm:p-12">
@@ -9,17 +11,17 @@ export default function OwnerDashboard() {
           <div className="bg-emerald-50 border border-emerald-100 rounded-xl p-6">
             <h3 className="text-xl font-bold text-emerald-900 mb-2">Active Queues</h3>
             <p className="text-emerald-700 text-sm mb-4">You have 0 active queues running right now.</p>
-            <button className="bg-emerald-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-emerald-700 transition-colors w-full">
+            <Link href="/items/add" className="block w-full bg-emerald-600 text-white text-center py-2 rounded-lg font-medium hover:bg-emerald-700 transition-colors">
               Start New Queue
-            </button>
+            </Link>
           </div>
           
           <div className="bg-amber-50 border border-amber-100 rounded-xl p-6">
             <h3 className="text-xl font-bold text-amber-900 mb-2">Service Settings</h3>
             <p className="text-amber-700 text-sm mb-4">Update your business details and operating hours.</p>
-            <button className="bg-amber-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-amber-700 transition-colors w-full">
+            <Link href="/items/manage" className="block w-full bg-amber-600 text-white text-center py-2 rounded-lg font-medium hover:bg-amber-700 transition-colors">
               Manage Services
-            </button>
+            </Link>
           </div>
         </div>
       </div>

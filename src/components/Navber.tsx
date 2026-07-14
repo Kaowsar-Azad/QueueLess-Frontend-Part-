@@ -34,14 +34,16 @@ export default function AppNavbar() {
           
           {/* 2. Center Links (Middle) */}
           <div className="hidden md:flex flex-1 justify-center gap-8">
+            <Link href="/" className={linkClass("/")}>Home</Link>
             <Link href="/explore" className={linkClass("/explore")}>Explore</Link>
-            <Link href="/live" className={linkClass("/live")}>Live Status</Link>
-            <Link href="/about" className={linkClass("/about")}>About Us</Link>
-            {isLoggedIn && (
+            {isLoggedIn ? (
               <>
+                <Link href="/live" className={linkClass("/live")}>Live Status</Link>
+                <Link href="/about" className={linkClass("/about")}>About Us</Link>
                 <Link href={`/dashboard/${(user as any)?.role || 'user'}`} className={linkClass(`/dashboard/${(user as any)?.role || 'user'}`)}>Dashboard</Link>
-                <Link href="/contact" className={linkClass("/contact")}>Help</Link>
               </>
+            ) : (
+              <Link href="/about" className={linkClass("/about")}>About Us</Link>
             )}
           </div>
           
@@ -67,9 +69,9 @@ export default function AppNavbar() {
                     <Link href={`/dashboard/${(user as any)?.role || 'user'}`} className="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors">
                       My Dashboard
                     </Link>
-                    <button className="w-full text-left px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors">
+                    <Link href="/settings" className="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors">
                       Settings
-                    </button>
+                    </Link>
                     <Link href="/contact" className="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors">
                       Help & Feedback
                     </Link>
