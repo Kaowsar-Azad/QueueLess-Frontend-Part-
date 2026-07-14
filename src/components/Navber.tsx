@@ -19,10 +19,10 @@ export default function AppNavbar() {
           
           {/* 2. Center Links (Middle) */}
           <div className="hidden md:flex flex-1 justify-center gap-8 font-medium">
-            <Link href="/" className="hover:text-blue-600 transition text-zinc-600">Services</Link>
+            <Link href="/explore" className="hover:text-blue-600 transition text-zinc-600">Explore</Link>
             <Link href="/explore" className="text-blue-600 font-semibold">Live Status</Link>
-            <Link href="/explore" className="hover:text-blue-600 transition text-zinc-600">Booking</Link>
-            <Link href="/explore" className="hover:text-blue-600 transition text-zinc-600">Help</Link>
+            <Link href="/about" className="hover:text-blue-600 transition text-zinc-600">About Us</Link>
+            <Link href="/contact" className="hover:text-blue-600 transition text-zinc-600">Help</Link>
           </div>
           
           {/* 3. Login Button (Right side) */}
