@@ -4,9 +4,42 @@ import Link from "next/link";
 import { FiMail, FiLock, FiUser, FiBriefcase } from "react-icons/fi";
 import { MdOutlineQueuePlayNext } from "react-icons/md";
 import { useState } from "react";
+import { signUp } from "@/lib/auth-client";
+import { toast } from "react-toastify";
+import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
   const [role, setRole] = useState("user");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
+  const handleRegister = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name || !email || !password) {
+      return toast.error("Please fill in all fields.");
+    }
+    setLoading(true);
+    await signUp.email({
+      email,
+      password,
+      name,
+      role, // Pass the role to Better Auth
+      fetchOptions: {
+        onResponse: (ctx) => {
+          setLoading(false);
+          if (ctx.error) {
+            toast.error(ctx.error.message || "Registration failed.");
+          } else {
+            toast.success("Registration successful! Please login.");
+            router.push("/login");
+          }
+        }
+      }
+    });
+  };
 
   return (
     <div className="min-h-[85vh] bg-zinc-50 flex flex-col md:flex-row">
@@ -49,7 +82,7 @@ export default function RegisterPage() {
           <h2 className="text-3xl font-bold text-zinc-900 mb-2">Create an account</h2>
           <p className="text-zinc-500 mb-8">Enter your details to get started with QueueLess.</p>
 
-          <form className="space-y-5">
+          <form className="space-y-5" onSubmit={handleRegister}>
             {/* Role Selection */}
             <div>
               <label className="block text-sm font-medium text-zinc-700 mb-2">I want to register as a:</label>
@@ -91,7 +124,9 @@ export default function RegisterPage() {
                 </div>
                 <input 
                   type="text" 
-                  className="w-full pl-10 pr-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow" 
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-zinc-900" 
                   placeholder="John Doe"
                 />
               </div>
@@ -105,7 +140,9 @@ export default function RegisterPage() {
                 </div>
                 <input 
                   type="email" 
-                  className="w-full pl-10 pr-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-zinc-900" 
                   placeholder="Enter your email"
                 />
               </div>
@@ -119,15 +156,17 @@ export default function RegisterPage() {
                 </div>
                 <input 
                   type="password" 
-                  className="w-full pl-10 pr-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow" 
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-zinc-900" 
                   placeholder="Create a password"
                 />
               </div>
               <p className="text-xs text-zinc-500 mt-2">Must be at least 8 characters long.</p>
             </div>
 
-            <button type="button" className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/20 mt-4">
-              Create Account
+            <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/20 mt-4 disabled:opacity-50">
+              {loading ? "Creating..." : "Create Account"}
             </button>
           </form>
 
