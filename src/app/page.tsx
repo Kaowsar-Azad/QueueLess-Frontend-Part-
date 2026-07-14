@@ -2,6 +2,7 @@ import HeroSection from "@/components/home/HeroSection";
 import HowItWorks from "@/components/home/HowItWorks";
 import PopularCategories from "@/components/home/PopularCategories";
 import FeaturedServices from "@/components/home/FeaturedServices";
+import BenefitsSection from "@/components/home/BenefitsSection";
 
 export default function Home() {
   return (
@@ -10,7 +11,8 @@ export default function Home() {
       <HowItWorks />
       <PopularCategories />
       <FeaturedServices />
-      {/* Other sections like BenefitsSection will be added here later */}
+      <BenefitsSection />
+      {/* Other sections like StatsSection will be added here later */}
     </main>
   );
 }
