@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { FiMail, FiLock, FiUser } from "react-icons/fi";
+import { FiMail, FiLock, FiUser, FiBriefcase } from "react-icons/fi";
 import { MdOutlineQueuePlayNext } from "react-icons/md";
+import { useState } from "react";
 
 export default function RegisterPage() {
+  const [role, setRole] = useState("user");
+
   return (
     <div className="min-h-[85vh] bg-zinc-50 flex flex-col md:flex-row">
       {/* Left Branding Side */}
@@ -47,6 +50,39 @@ export default function RegisterPage() {
           <p className="text-zinc-500 mb-8">Enter your details to get started with QueueLess.</p>
 
           <form className="space-y-5">
+            {/* Role Selection */}
+            <div>
+              <label className="block text-sm font-medium text-zinc-700 mb-2">I want to register as a:</label>
+              <div className="grid grid-cols-2 gap-4">
+                <label className={`cursor-pointer border rounded-xl p-3 flex items-center justify-center gap-2 transition-all ${
+                  role === "user" ? "border-blue-500 bg-blue-50 text-blue-700 font-semibold" : "border-zinc-200 text-zinc-600 hover:bg-zinc-50"
+                }`}>
+                  <input 
+                    type="radio" 
+                    name="role" 
+                    value="user" 
+                    className="hidden" 
+                    checked={role === "user"} 
+                    onChange={() => setRole("user")} 
+                  />
+                  <FiUser /> General User
+                </label>
+                <label className={`cursor-pointer border rounded-xl p-3 flex items-center justify-center gap-2 transition-all ${
+                  role === "owner" ? "border-blue-500 bg-blue-50 text-blue-700 font-semibold" : "border-zinc-200 text-zinc-600 hover:bg-zinc-50"
+                }`}>
+                  <input 
+                    type="radio" 
+                    name="role" 
+                    value="owner" 
+                    className="hidden" 
+                    checked={role === "owner"} 
+                    onChange={() => setRole("owner")} 
+                  />
+                  <FiBriefcase /> Service Owner
+                </label>
+              </div>
+            </div>
+
             <div>
               <label className="block text-sm font-medium text-zinc-700 mb-1">Full Name</label>
               <div className="relative">

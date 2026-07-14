@@ -88,10 +88,6 @@ export default function LoginPage() {
             <button type="button" className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/20">
               Sign In
             </button>
-            
-            <button type="button" className="w-full bg-zinc-100 text-zinc-800 font-bold py-3 rounded-xl hover:bg-zinc-200 transition-colors border border-zinc-200">
-              Demo Login
-            </button>
           </form>
 
           <div className="mt-8 text-center text-zinc-600">

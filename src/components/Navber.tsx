@@ -2,19 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { 
-  Button, 
-  Avatar, 
-  Dropdown, 
-  DropdownTrigger, 
-  DropdownMenu, 
-  DropdownItem 
-} from "@heroui/react";
+import { Button } from "@heroui/react";
 import { MdOutlineQueuePlayNext } from "react-icons/md";
 
 export default function AppNavbar() {
-  // Mock login state. Set to true to see the logged-in design, false for logged-out.
-  const [isLoggedIn, setIsLoggedIn] = useState(true);
+  // Mock login state. Set to false to see the logged-out design (Sign In / Get Started buttons).
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <nav className="sticky top-0 z-50 w-full bg-white/90 backdrop-blur-md border-b border-zinc-200">
@@ -39,46 +32,44 @@ export default function AppNavbar() {
           {/* 3. Auth Actions (Right side) */}
           <div className="flex justify-end items-center gap-4">
             {isLoggedIn ? (
-              <Dropdown placement="bottom-end">
-                <DropdownTrigger>
-                  <Avatar
-                    isBordered
-                    as="button"
-                    className="transition-transform"
-                    color="primary"
-                    name="Kaowsar"
-                    size="sm"
-                    src="https://i.pravatar.cc/150?u=a042581f4e29026704d"
-                  />
-                </DropdownTrigger>
-                <DropdownMenu aria-label="Profile Actions" variant="flat">
-                  <DropdownItem key="profile" className="h-14 gap-2">
-                    <p className="font-semibold">Signed in as</p>
-                    <p className="font-semibold">kaowsar@example.com</p>
-                  </DropdownItem>
-                  <DropdownItem key="dashboard" as={Link} href="/items/manage">
-                    My Dashboard
-                  </DropdownItem>
-                  <DropdownItem key="settings">
-                    Settings
-                  </DropdownItem>
-                  <DropdownItem key="help_and_feedback" as={Link} href="/contact">
-                    Help & Feedback
-                  </DropdownItem>
-                  <DropdownItem key="logout" color="danger" onPress={() => setIsLoggedIn(false)}>
-                    Log Out
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+              <div className="relative group">
+                <button className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-blue-500 overflow-hidden focus:outline-none transition-transform hover:scale-105">
+                  <img src="https://i.pravatar.cc/150?u=a042581f4e29026704d" alt="Profile" className="w-full h-full object-cover" />
+                </button>
+                
+                {/* Dropdown Menu */}
+                <div className="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-zinc-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50">
+                  <div className="p-4 border-b border-zinc-100">
+                    <p className="text-sm font-semibold text-zinc-800">Signed in as</p>
+                    <p className="text-sm font-medium text-zinc-500 truncate">kaowsar@example.com</p>
+                  </div>
+                  <div className="p-2 space-y-1">
+                    <Link href="/items/manage" className="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors">
+                      My Dashboard
+                    </Link>
+                    <button className="w-full text-left px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors">
+                      Settings
+                    </button>
+                    <Link href="/contact" className="block px-4 py-2 text-sm text-zinc-700 hover:bg-zinc-100 rounded-lg transition-colors">
+                      Help & Feedback
+                    </Link>
+                  </div>
+                  <div className="p-2 border-t border-zinc-100">
+                    <button onClick={() => setIsLoggedIn(false)} className="w-full text-left px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                      Log Out
+                    </button>
+                  </div>
+                </div>
+              </div>
             ) : (
-              <>
-                <Button as={Link} href="/login" className="hidden sm:flex bg-blue-50 text-blue-700 font-medium hover:bg-blue-100" radius="sm">
+              <div className="flex gap-4 items-center">
+                <Link href="/login" className="hidden sm:flex items-center justify-center bg-blue-50 text-blue-700 font-medium hover:bg-blue-100 px-4 py-2 rounded-lg transition-colors">
                   Sign In
-                </Button>
-                <Button as={Link} href="/register" className="bg-blue-600 text-white font-medium hover:bg-blue-700" radius="sm">
+                </Link>
+                <Link href="/register" className="flex items-center justify-center bg-blue-600 text-white font-medium hover:bg-blue-700 px-4 py-2 rounded-lg transition-colors">
                   Get Started
-                </Button>
-              </>
+                </Link>
+              </div>
             )}
           </div>
         </div>
