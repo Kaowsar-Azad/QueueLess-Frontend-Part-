@@ -4,6 +4,7 @@ import PopularCategories from "@/components/home/PopularCategories";
 import FeaturedServices from "@/components/home/FeaturedServices";
 import BenefitsSection from "@/components/home/BenefitsSection";
 import StatsSection from "@/components/home/StatsSection";
+import TestimonialsFAQ from "@/components/home/TestimonialsFAQ";
 
 export default function Home() {
   return (
@@ -14,7 +15,7 @@ export default function Home() {
       <FeaturedServices />
       <BenefitsSection />
       <StatsSection />
-      {/* Other sections like TestimonialsFAQ will be added here later */}
+      <TestimonialsFAQ />
     </main>
   );
 }
