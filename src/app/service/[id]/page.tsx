@@ -21,6 +21,7 @@ interface Service {
   currentQueue: number;
   totalTokens: number;
   ownerId?: string;
+  image?: string;
   images?: string[];
   address?: string;
   contactNumber?: string;
@@ -206,7 +207,7 @@ export default function ServiceDetailsPage() {
 
   const images = service.images && service.images.length > 0 
     ? service.images 
-    : ["https://placehold.co/800x450?text=No+Image+Available"];
+    : (service.image ? [service.image] : ["https://placehold.co/800x450?text=No+Image+Available"]);
   const isOwner = session?.user?.id === service.ownerId;
 
   return (
@@ -310,7 +311,7 @@ export default function ServiceDetailsPage() {
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Share your experience..."
-                    className="w-full px-4 py-3 rounded-xl border border-zinc-200 focus:ring-2 focus:ring-blue-500 outline-none text-sm mb-3 resize-none h-24"
+                    className="w-full px-4 py-3 rounded-xl border border-zinc-200 focus:ring-2 focus:ring-blue-500 outline-none text-sm mb-3 resize-none h-24 text-zinc-900"
                     required
                   />
                   <button
