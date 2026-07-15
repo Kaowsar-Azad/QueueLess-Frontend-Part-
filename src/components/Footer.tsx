@@ -5,13 +5,13 @@ import { MdOutlineQueuePlayNext } from "react-icons/md";
 export default function Footer() {
   return (
     <footer className="relative bg-zinc-950 text-zinc-400 py-16 overflow-hidden border-t border-zinc-800 mt-auto">
-      {/* Subtle background glow */}
+      
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-900/20 rounded-full blur-[100px] pointer-events-none"></div>
       
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8">
           
-          {/* Brand & About */}
+          
           <div className="col-span-1 md:col-span-12 lg:col-span-5">
             <div className="flex items-center mb-6">
               <div className="w-10 h-10 bg-blue-600/10 rounded-xl flex items-center justify-center mr-3 border border-blue-500/20">
@@ -38,7 +38,6 @@ export default function Footer() {
             </div>
           </div>
           
-          {/* Quick Links */}
           <div className="col-span-1 md:col-span-4 lg:col-span-2 lg:col-start-7">
             <h3 className="text-white font-semibold text-lg mb-6">Company</h3>
             <ul className="space-y-4">

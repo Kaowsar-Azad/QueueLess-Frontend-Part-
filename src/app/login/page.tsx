@@ -138,12 +138,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex items-center">
-              <input id="remember-me" name="remember-me" type="checkbox" className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-zinc-300 rounded" />
-              <label htmlFor="remember-me" className="ml-2 block text-sm text-zinc-600">
-                Remember me for 30 days
-              </label>
-            </div>
+
 
             <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/20 disabled:opacity-50">
               {loading ? "Signing In..." : "Sign In"}
