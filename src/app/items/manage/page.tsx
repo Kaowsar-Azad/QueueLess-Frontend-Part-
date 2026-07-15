@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { FiArrowLeft, FiTrash2, FiClock, FiUsers, FiTag } from "react-icons/fi";
@@ -19,34 +18,33 @@ interface Service {
 
 export default function ManageServicesPage() {
   const { data: session } = useSession();
-  const router = useRouter();
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchServices = async () => {
-    if (!session?.user) return;
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/services?ownerId=${session.user.id}`,
-        { credentials: "include" }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch services");
-      }
-      const data = await response.json();
-      setServices(data);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to load services");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchServices = async () => {
+      if (!session?.user) return;
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/services?ownerId=${session.user.id}`,
+          { credentials: "include" }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch services");
+        }
+        const data = await response.json();
+        setServices(data);
+      } catch (error: unknown) {
+        toast.error((error as Error).message || "Failed to load services");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (session?.user) {
       fetchServices();
     }
-  }, [session]);
+  }, [session?.user]);
 
   const handleDelete = async (id: string) => {
     if (!confirm("Are you sure you want to delete this service queue?")) return;
@@ -61,8 +59,8 @@ export default function ManageServicesPage() {
       }
       toast.success("Service successfully deleted!");
       setServices(services.filter((s) => s._id !== id));
-    } catch (error: any) {
-      toast.error(error.message || "Failed to delete service");
+    } catch (error: unknown) {
+      toast.error((error as Error).message || "Failed to delete service");
     }
   };
 
@@ -105,7 +103,7 @@ export default function ManageServicesPage() {
             </div>
           ) : services.length === 0 ? (
             <div className="text-center py-12 bg-zinc-50 rounded-2xl border border-dashed border-zinc-200">
-              <p className="text-zinc-500 font-medium">You haven't listed any services yet.</p>
+              <p className="text-zinc-500 font-medium">You haven&apos;t listed any services yet.</p>
               <Link
                 href="/items/add"
                 className="mt-4 inline-block bg-blue-600 text-white px-5 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors"

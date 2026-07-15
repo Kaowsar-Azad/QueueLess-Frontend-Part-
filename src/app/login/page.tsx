@@ -33,7 +33,7 @@ export default function LoginPage() {
     } else {
       toast.success("Login successful!");
       // Redirect based on role (defaulting to user if not set)
-      // @ts-ignore - bypassing TS checking for role field temporarily
+      // @ts-expect-error - bypassing TS checking for role field temporarily
       const role = data?.user?.role || "user";
       
       if (role === "admin") {
@@ -136,7 +136,7 @@ export default function LoginPage() {
           </form>
 
           <div className="mt-8 text-center text-zinc-600">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/register" className="font-semibold text-blue-600 hover:text-blue-500 transition-colors">
               Sign up
             </Link>

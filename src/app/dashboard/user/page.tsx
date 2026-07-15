@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { FiCalendar, FiClock, FiXCircle, FiGrid, FiActivity } from "react-icons/fi";
+import { FiClock, FiXCircle, FiActivity } from "react-icons/fi";
 
 interface Booking {
   _id: string;
@@ -24,34 +23,33 @@ interface Booking {
 
 export default function UserDashboard() {
   const { data: session } = useSession();
-  const router = useRouter();
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchBookings = async () => {
-    if (!session?.user) return;
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/bookings?userId=${session.user.id}`,
-        { credentials: "include" }
-      );
-      if (!response.ok) {
-        throw new Error("Failed to fetch tickets");
-      }
-      const data = await response.json();
-      setBookings(data);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to load tickets");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    const fetchBookings = async () => {
+      if (!session?.user) return;
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/bookings?userId=${session.user.id}`,
+          { credentials: "include" }
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch tickets");
+        }
+        const data = await response.json();
+        setBookings(data);
+      } catch (error: unknown) {
+        toast.error((error as Error).message || "Failed to load tickets");
+      } finally {
+        setLoading(false);
+      }
+    };
+
     if (session?.user) {
       fetchBookings();
     }
-  }, [session]);
+  }, [session?.user]);
 
   const handleCancelBooking = async (id: string) => {
     if (!confirm("Are you sure you want to cancel this booking?")) return;
@@ -77,8 +75,8 @@ export default function UserDashboard() {
       setBookings(
         bookings.map((b) => (b._id === id ? { ...b, status: "cancelled" as const } : b))
       );
-    } catch (error: any) {
-      toast.error(error.message || "Failed to cancel booking");
+    } catch (error: unknown) {
+      toast.error((error as Error).message || "Failed to cancel booking");
     }
   };
 
@@ -110,7 +108,7 @@ export default function UserDashboard() {
           </div>
         ) : bookings.length === 0 ? (
           <div className="bg-white border border-zinc-200/80 rounded-3xl p-12 text-center shadow-sm">
-            <p className="text-zinc-600 text-lg font-semibold">You don't have any active tickets right now.</p>
+            <p className="text-zinc-600 text-lg font-semibold">You don&apos;t have any active tickets right now.</p>
             <Link
               href="/explore"
               className="mt-6 inline-block bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 transition-colors shadow-md shadow-blue-600/20"

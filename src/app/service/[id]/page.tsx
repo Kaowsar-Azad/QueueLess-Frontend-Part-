@@ -6,7 +6,7 @@ import { useRouter, useParams } from "next/navigation";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { 
-  FiArrowLeft, FiClock, FiUsers, FiMapPin, FiCalendar, FiActivity, 
+  FiArrowLeft, FiClock, FiMapPin, FiCalendar, 
   FiStar, FiShield, FiPhone, FiInfo, FiArrowRight, FiSend 
 } from "react-icons/fi";
 
@@ -86,8 +86,8 @@ export default function ServiceDetailsPage() {
           setRelatedServices(filtered);
         }
 
-      } catch (error: any) {
-        toast.error(error.message || "Failed to load details");
+      } catch (error: unknown) {
+        toast.error((error as Error).message || "Failed to load details");
       } finally {
         setLoading(false);
       }
@@ -127,8 +127,8 @@ export default function ServiceDetailsPage() {
       setNewComment("");
       setNewRating(5);
       toast.success("Review submitted!");
-    } catch (error: any) {
-      toast.error(error.message);
+    } catch (error: unknown) {
+      toast.error((error as Error).message);
     } finally {
       setSubmittingReview(false);
     }
@@ -176,8 +176,8 @@ export default function ServiceDetailsPage() {
       }
       
       router.push("/dashboard/user");
-    } catch (error: any) {
-      toast.error(error.message || "Failed to book token");
+    } catch (error: unknown) {
+      toast.error((error as Error).message || "Failed to book token");
     } finally {
       setBookingLoading(false);
     }
@@ -206,7 +206,7 @@ export default function ServiceDetailsPage() {
 
   const images = service.images && service.images.length > 0 
     ? service.images 
-    : (service.image ? [service.image] : ["https://placehold.co/800x450?text=No+Image+Available"]);
+    : ["https://placehold.co/800x450?text=No+Image+Available"];
   const isOwner = session?.user?.id === service.ownerId;
 
   return (
@@ -225,6 +225,7 @@ export default function ServiceDetailsPage() {
             {/* Multi-Image Gallery */}
             <div className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm overflow-hidden p-6">
               <div className="aspect-[16/9] w-full rounded-2xl overflow-hidden bg-zinc-100 relative">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
                   src={images[activeImageIndex]} 
                   alt="Service Detail" 
@@ -241,6 +242,7 @@ export default function ServiceDetailsPage() {
                         activeImageIndex === idx ? "border-blue-600 scale-95" : "border-transparent opacity-70 hover:opacity-100"
                       }`}
                     >
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
                     </button>
                   ))}

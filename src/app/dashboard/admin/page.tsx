@@ -28,8 +28,8 @@ export default function AdminDashboard() {
         }
         const data = await response.json();
         setStats(data);
-      } catch (error: any) {
-        toast.error(error.message || "Failed to load admin stats");
+      } catch (error: unknown) {
+        toast.error((error as Error).message || "Failed to load admin stats");
       } finally {
         setLoading(false);
       }
@@ -38,7 +38,7 @@ export default function AdminDashboard() {
     fetchAdminStats();
   }, []);
 
-  if (!session?.user || (session.user as any).role !== "admin") {
+  if (!session?.user || (session.user as { role?: string }).role !== "admin") {
     return (
       <div className="min-h-[85vh] flex items-center justify-center">
         <p className="text-zinc-600 font-semibold">Access Denied. Admins Only.</p>

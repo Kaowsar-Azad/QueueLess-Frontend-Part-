@@ -22,7 +22,7 @@ export default function RegisterPage() {
       return toast.error("Please fill in all fields.");
     }
     setLoading(true);
-    const { data, error } = await signUp.email({
+    const { error } = await signUp.email({
       email,
       password,
       name,
@@ -170,7 +170,7 @@ export default function RegisterPage() {
           </form>
 
           <div className="mt-8 text-center text-zinc-600">
-            Already have an account?{' '}
+            Already have an account?{` `}
             <Link href="/login" className="font-semibold text-blue-600 hover:text-blue-500 transition-colors">
               Sign in
             </Link>

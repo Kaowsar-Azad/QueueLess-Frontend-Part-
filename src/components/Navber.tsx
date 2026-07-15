@@ -45,12 +45,12 @@ export default function AppNavbar() {
             <Link href="/explore" className={linkClass("/explore")}>Explore</Link>
             {isLoggedIn ? (
               <>
-                {((user as any)?.role === 'user' || !(user as any)?.role) && (
+                {((user as { role?: string })?.role === 'user' || !(user as { role?: string })?.role) && (
                   <Link href="/live" className={linkClass("/live")}>Live Status</Link>
                 )}
                 <Link href="/about" className={linkClass("/about")}>About Us</Link>
                 <Link href="/contact" className={linkClass("/contact")}>Contact</Link>
-                <Link href={`/dashboard/${(user as any)?.role || 'user'}`} className={linkClass(`/dashboard/${(user as any)?.role || 'user'}`)}>Dashboard</Link>
+                <Link href={`/dashboard/${(user as { role?: string })?.role || 'user'}`} className={linkClass(`/dashboard/${(user as { role?: string })?.role || 'user'}`)}>Dashboard</Link>
               </>
             ) : (
               <>
@@ -70,7 +70,10 @@ export default function AppNavbar() {
                   <div className="flex items-center gap-3 bg-zinc-50 px-3 py-1.5 rounded-full border border-zinc-200/80">
                     <div className="flex items-center justify-center w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold overflow-hidden border border-blue-200">
                       {user?.image ? (
-                        <img src={user.image} alt="Profile" className="w-full h-full object-cover" />
+                        <>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={user.image} alt="Profile" className="w-full h-full object-cover" />
+                        </>
                       ) : (
                         <span>{getInitials(user?.name || "User")}</span>
                       )}
@@ -123,7 +126,10 @@ export default function AppNavbar() {
               <div className="flex items-center gap-4 mb-6 p-4 bg-zinc-50 rounded-2xl border border-zinc-100">
                 <div className="flex items-center justify-center w-12 h-12 rounded-full bg-blue-100 text-blue-700 font-bold text-lg overflow-hidden border-2 border-white shadow-sm">
                   {user?.image ? (
-                    <img src={user.image} alt="Profile" className="w-full h-full object-cover" />
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={user.image} alt="Profile" className="w-full h-full object-cover" />
+                    </>
                   ) : (
                     <span>{getInitials(user?.name || "User")}</span>
                   )}
@@ -140,12 +146,12 @@ export default function AppNavbar() {
             
             {isLoggedIn ? (
               <>
-                {((user as any)?.role === 'user' || !(user as any)?.role) && (
+                {((user as { role?: string })?.role === 'user' || !(user as { role?: string })?.role) && (
                   <Link href="/live" onClick={() => setMobileMenuOpen(false)} className={mobileLinkClass("/live")}>Live Status</Link>
                 )}
                 <Link href="/about" onClick={() => setMobileMenuOpen(false)} className={mobileLinkClass("/about")}>About Us</Link>
                 <Link href="/contact" onClick={() => setMobileMenuOpen(false)} className={mobileLinkClass("/contact")}>Contact</Link>
-                <Link href={`/dashboard/${(user as any)?.role || 'user'}`} onClick={() => setMobileMenuOpen(false)} className={mobileLinkClass(`/dashboard/${(user as any)?.role || 'user'}`)}>Dashboard</Link>
+                <Link href={`/dashboard/${(user as { role?: string })?.role || 'user'}`} onClick={() => setMobileMenuOpen(false)} className={mobileLinkClass(`/dashboard/${(user as { role?: string })?.role || 'user'}`)}>Dashboard</Link>
                 
                 <div className="pt-4 mt-4 border-t border-zinc-100">
                   <button 

@@ -54,7 +54,7 @@ export default function TestimonialsFAQ() {
           {/* Testimonials */}
           <div>
             <h2 className="text-3xl font-bold text-blue-900 mb-2">What Our Users Say</h2>
-            <p className="text-zinc-600 mb-8">Don't just take our word for it.</p>
+            <p className="text-zinc-600 mb-8">Don&apos;t just take our word for it.</p>
             
             <div className="flex flex-col gap-6">
               {testimonials.map((t) => (
@@ -64,7 +64,7 @@ export default function TestimonialsFAQ() {
                       <FiStar key={i} className="fill-current" />
                     ))}
                   </div>
-                  <p className="text-zinc-700 italic mb-6">"{t.review}"</p>
+                  <p className="text-zinc-700 italic mb-6">&quot;{t.review}&quot;</p>
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 bg-blue-100 rounded-full flex justify-center items-center font-bold text-blue-600">
                       {t.name.charAt(0)}
@@ -82,7 +82,7 @@ export default function TestimonialsFAQ() {
           {/* FAQs */}
           <div>
             <h2 className="text-3xl font-bold text-blue-900 mb-2">Frequently Asked Questions</h2>
-            <p className="text-zinc-600 mb-8">Got questions? We've got answers.</p>
+            <p className="text-zinc-600 mb-8">Got questions? We&apos;ve got answers.</p>
             
             <div className="flex flex-col gap-4">
               {faqs.map((faq) => (

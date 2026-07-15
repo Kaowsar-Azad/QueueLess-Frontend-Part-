@@ -37,8 +37,8 @@ export default function ExplorePage() {
         }
         const data = await response.json();
         setServices(data);
-      } catch (error: any) {
-        toast.error(error.message || "Failed to load services");
+      } catch (error: unknown) {
+        toast.error((error as Error).message || "Failed to load services");
       } finally {
         setLoading(false);
       }
@@ -74,6 +74,7 @@ export default function ExplorePage() {
 
   // Reset page on search/filter changes
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setCurrentPage(1);
   }, [search, categoryFilter, availabilityFilter, sortBy]);
 
@@ -176,6 +177,7 @@ export default function ExplorePage() {
                     {/* Title & Desc */}
                     <div className="flex items-start gap-4 mb-4">
                       {(service.images && service.images.length > 0) || service.image ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
                         <img 
                           src={(service.images && service.images.length > 0) ? service.images[0] : service.image} 
                           alt={service.name} 

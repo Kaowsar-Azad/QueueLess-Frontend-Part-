@@ -91,8 +91,8 @@ export default function AddServicePage() {
 
       toast.success("Service successfully created!");
       router.push(`/dashboard/owner`);
-    } catch (error: any) {
-      toast.error(error.message || "Failed to create service");
+    } catch (error: unknown) {
+      toast.error((error as Error).message || "Failed to create service");
     } finally {
       setLoading(false);
     }
