@@ -39,7 +39,7 @@ export default function ServiceBookingsPage({ params }: PageProps) {
     try {
       // Fetch service details
       const serviceResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/services/${serviceId}`,
+        `/api/services/${serviceId}`,
         { credentials: "include" }
       );
       if (!serviceResponse.ok) {
@@ -56,7 +56,7 @@ export default function ServiceBookingsPage({ params }: PageProps) {
 
       // Fetch bookings for this service
       const bookingsResponse = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/bookings?serviceId=${serviceId}`,
+        `/api/bookings?serviceId=${serviceId}`,
         { credentials: "include" }
       );
       if (!bookingsResponse.ok) {
@@ -85,7 +85,7 @@ export default function ServiceBookingsPage({ params }: PageProps) {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/bookings/${bookingId}`,
+        `/api/bookings/${bookingId}`,
         {
           method: "PATCH",
           credentials: "include",

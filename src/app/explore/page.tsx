@@ -31,7 +31,7 @@ export default function ExplorePage() {
   useEffect(() => {
     const fetchServices = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/services`);
+        const response = await fetch(`/api/services`);
         if (!response.ok) {
           throw new Error("Failed to fetch services");
         }

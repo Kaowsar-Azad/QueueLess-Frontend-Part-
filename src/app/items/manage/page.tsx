@@ -26,7 +26,7 @@ export default function ManageServicesPage() {
       if (!session?.user) return;
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/services?ownerId=${session.user.id}`,
+          `/api/services?ownerId=${session.user.id}`,
           { credentials: "include" }
         );
         if (!response.ok) {
@@ -51,7 +51,7 @@ export default function ManageServicesPage() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/services/${id}`,
+        `/api/services/${id}`,
         { method: "DELETE", credentials: "include" }
       );
       if (!response.ok) {

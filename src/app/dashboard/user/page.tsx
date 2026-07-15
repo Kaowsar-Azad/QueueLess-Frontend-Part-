@@ -31,7 +31,7 @@ export default function UserDashboard() {
       if (!session?.user) return;
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/bookings?userId=${session.user.id}`,
+          `/api/bookings?userId=${session.user.id}`,
           { credentials: "include" }
         );
         if (!response.ok) {
@@ -56,7 +56,7 @@ export default function UserDashboard() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/bookings/${id}`,
+        `/api/bookings/${id}`,
         {
           method: "PATCH",
           credentials: "include",

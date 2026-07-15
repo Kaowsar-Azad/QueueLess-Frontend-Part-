@@ -30,7 +30,7 @@ export default function LiveStatusPage() {
     if (showToast) setRefreshing(true);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/bookings?userId=${session.user.id}`,
+        `/api/bookings?userId=${session.user.id}`,
         { credentials: "include" }
       );
       if (!response.ok) {

@@ -58,7 +58,7 @@ export default function ServiceDetailsPage() {
       try {
         // Fetch current service details
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/services/${id}`
+          `/api/services/${id}`
         );
         if (!response.ok) {
           throw new Error("Service not found");
@@ -68,7 +68,7 @@ export default function ServiceDetailsPage() {
 
         // Fetch reviews
         const reviewsRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/reviews/service/${id}`
+          `/api/reviews/service/${id}`
         );
         if (reviewsRes.ok) {
           const reviewsData = await reviewsRes.json();
@@ -77,7 +77,7 @@ export default function ServiceDetailsPage() {
 
         // Fetch all services to filter out related
         const allRes = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/services`
+          `/api/services`
         );
         if (allRes.ok) {
           const allData: Service[] = await allRes.json();
@@ -111,7 +111,7 @@ export default function ServiceDetailsPage() {
 
     setSubmittingReview(true);
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/reviews`, {
+      const res = await fetch(`/api/reviews`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -148,7 +148,7 @@ export default function ServiceDetailsPage() {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/bookings`,
+        `/api/bookings`,
         {
           method: "POST",
           credentials: "include",

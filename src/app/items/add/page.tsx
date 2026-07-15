@@ -62,7 +62,7 @@ export default function AddServicePage() {
         }
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/services`, {
+      const response = await fetch(`/api/services`, {
         method: "POST",
         credentials: "include",
         headers: {
