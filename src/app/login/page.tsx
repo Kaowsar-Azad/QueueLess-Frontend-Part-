@@ -3,16 +3,31 @@
 import Link from "next/link";
 import { FiMail, FiLock } from "react-icons/fi";
 import { MdOutlineQueuePlayNext } from "react-icons/md";
-import { useState } from "react";
-import { signIn } from "@/lib/auth-client";
+import { useState, useEffect } from "react";
+import { signIn, useSession } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
+  const { data: session } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+
+  useEffect(() => {
+    if (session?.user) {
+      // @ts-expect-error - bypassing TS checking for role field temporarily
+      const role = session.user?.role || "user";
+      if (role === "admin") {
+        router.push("/dashboard/admin");
+      } else if (role === "owner") {
+        router.push("/dashboard/owner");
+      } else {
+        router.push("/dashboard/user");
+      }
+    }
+  }, [session, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
