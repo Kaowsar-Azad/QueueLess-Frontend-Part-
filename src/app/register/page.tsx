@@ -26,6 +26,7 @@ export default function RegisterPage() {
       email,
       password,
       name,
+      // @ts-expect-error - role is a custom field passed to the backend
       role, // Pass the role to Better Auth
       fetchOptions: {
         onResponse: (ctx) => {
