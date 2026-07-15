@@ -1,6 +1,27 @@
+"use client";
+
 import Link from "next/link";
+import { useSession } from "@/lib/auth-client";
 
 export default function OwnerDashboard() {
+  const { data: session, isPending } = useSession();
+
+  if (isPending) {
+    return (
+      <div className="min-h-[85vh] flex items-center justify-center bg-zinc-950">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
+
+  if (!session?.user || (session.user as { role?: string }).role !== "owner") {
+    return (
+      <div className="min-h-[85vh] flex items-center justify-center bg-zinc-950">
+        <p className="text-zinc-600 font-semibold">Access Denied. Owners Only.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-zinc-50 p-8 sm:p-12">
       <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-sm border border-zinc-200 p-8">

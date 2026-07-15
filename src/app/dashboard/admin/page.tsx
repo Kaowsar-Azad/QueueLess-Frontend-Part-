@@ -12,7 +12,7 @@ interface Stats {
 }
 
 export default function AdminDashboard() {
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const [stats, setStats] = useState<Stats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -35,12 +35,22 @@ export default function AdminDashboard() {
       }
     };
 
-    fetchAdminStats();
-  }, []);
+    if (session?.user && (session.user as { role?: string }).role === "admin") {
+      fetchAdminStats();
+    }
+  }, [session]);
+
+  if (isPending) {
+    return (
+      <div className="min-h-[85vh] flex items-center justify-center bg-zinc-950">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
 
   if (!session?.user || (session.user as { role?: string }).role !== "admin") {
     return (
-      <div className="min-h-[85vh] flex items-center justify-center">
+      <div className="min-h-[85vh] flex items-center justify-center bg-zinc-950">
         <p className="text-zinc-600 font-semibold">Access Denied. Admins Only.</p>
       </div>
     );

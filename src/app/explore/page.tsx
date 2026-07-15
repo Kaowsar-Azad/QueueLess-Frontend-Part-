@@ -202,7 +202,7 @@ export default function ExplorePage() {
                         <FiClock /> {service.startHour} - {service.endHour}
                       </span>
                       <span className="flex items-center gap-1.5">
-                        <FiUsers /> Limit: {service.maxTokens} tokens
+                        <FiUsers /> Available: {Math.max(0, service.maxTokens - service.totalTokens)} tokens
                       </span>
                     </div>
 

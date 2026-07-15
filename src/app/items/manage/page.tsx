@@ -137,13 +137,23 @@ export default function ManageServicesPage() {
                     </div>
                   </div>
 
-                  <button
-                    onClick={() => handleDelete(service._id)}
-                    className="mt-4 sm:mt-0 bg-red-50 text-red-600 hover:bg-red-100 p-3 rounded-xl transition-colors border border-red-100"
-                    title="Delete Service"
-                  >
-                    <FiTrash2 className="text-lg" />
-                  </button>
+                  <div className="flex gap-2 mt-4 sm:mt-0">
+                    <Link
+                      href={`/items/manage/${service._id}`}
+                      className="bg-blue-50 text-blue-600 hover:bg-blue-100 px-4 py-2.5 rounded-xl transition-colors border border-blue-100 flex items-center gap-2 font-bold text-sm"
+                    >
+                      <FiUsers />
+                      <span>Bookings</span>
+                    </Link>
+                    
+                    <button
+                      onClick={() => handleDelete(service._id)}
+                      className="bg-red-50 text-red-600 hover:bg-red-100 p-3 rounded-xl transition-colors border border-red-100"
+                      title="Delete Service"
+                    >
+                      <FiTrash2 className="text-lg" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
