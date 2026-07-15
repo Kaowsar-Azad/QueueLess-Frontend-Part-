@@ -124,9 +124,10 @@ export default function ServiceDetailsPage() {
         })
       });
 
-      if (!res.ok) throw new Error("Failed to submit review");
-      const newReview = await res.json();
-      setReviews([newReview, ...reviews]);
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to submit review");
+      
+      setReviews([data, ...reviews]);
       setNewComment("");
       setNewRating(5);
       toast.success("Review submitted!");
