@@ -28,7 +28,6 @@ export async function middleware(request: NextRequest) {
     }
 
     // Role-based routing
-    // @ts-expect-error - role field bypass
     const role = user.role || "user";
 
     // Admins only need access to admin dashboard
