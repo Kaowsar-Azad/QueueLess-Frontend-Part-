@@ -22,24 +22,22 @@ export default function RegisterPage() {
       return toast.error("Please fill in all fields.");
     }
     setLoading(true);
-    await signUp.email({
+    const { data, error } = await signUp.email({
       email,
       password,
       name,
       // @ts-expect-error - role is a custom field passed to the backend
       role, // Pass the role to Better Auth
-      fetchOptions: {
-        onResponse: (ctx) => {
-          setLoading(false);
-          if (ctx.error) {
-            toast.error(ctx.error.message || "Registration failed.");
-          } else {
-            toast.success("Registration successful! Please login.");
-            router.push("/login");
-          }
-        }
-      }
     });
+    
+    setLoading(false);
+    
+    if (error) {
+      toast.error(error.message || "Registration failed.");
+    } else {
+      toast.success("Registration successful! Please login.");
+      router.push("/login");
+    }
   };
 
   return (
