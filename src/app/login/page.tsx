@@ -35,29 +35,32 @@ export default function LoginPage() {
       return toast.error("Please fill in all fields.");
     }
     setLoading(true);
-    
-    const { data, error } = await signIn.email({
-      email,
-      password,
-    });
-    
-    setLoading(false);
-    
-    if (error) {
-      toast.error(error.message || "Login failed.");
-    } else {
-      toast.success("Login successful!");
-      // Redirect based on role (defaulting to user if not set)
-      // @ts-expect-error - bypassing TS checking for role field temporarily
-      const role = data?.user?.role || "user";
+    try {
+      const { data, error } = await signIn.email({
+        email,
+        password,
+      });
       
-      if (role === "admin") {
-        router.push("/dashboard/admin");
-      } else if (role === "owner") {
-        router.push("/dashboard/owner");
+      if (error) {
+        toast.error(error.message || "Login failed.");
       } else {
-        router.push("/dashboard/user");
+        toast.success("Login successful!");
+        // Redirect based on role (defaulting to user if not set)
+        // @ts-expect-error - bypassing TS checking for role field temporarily
+        const role = data?.user?.role || "user";
+        
+        if (role === "admin") {
+          router.push("/dashboard/admin");
+        } else if (role === "owner") {
+          router.push("/dashboard/owner");
+        } else {
+          router.push("/dashboard/user");
+        }
       }
+    } catch (err: any) {
+      toast.error(err?.message || "Network error: Could not connect to the server.");
+    } finally {
+      setLoading(false);
     }
   };
 
