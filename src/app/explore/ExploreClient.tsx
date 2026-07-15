@@ -28,6 +28,7 @@ export default function ExploreClient() {
   
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
   const [search, setSearch] = useState(initialSearch);
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [availabilityFilter, setAvailabilityFilter] = useState("All");
@@ -35,25 +36,30 @@ export default function ExploreClient() {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
 
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const response = await fetch(`/api/services`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch services");
-        }
-        const data = await response.json();
-        setServices(data);
-      } catch (error: unknown) {
-        toast.error((error as Error).message || "Failed to load services");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchServices = async () => {
+    setLoading(true);
+    setFetchError(null);
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 15000);
+    try {
+      const response = await fetch(`/api/services`, { signal: controller.signal });
+      clearTimeout(timeout);
+      if (!response.ok) throw new Error(`Server returned ${response.status}`);
+      const data = await response.json();
+      setServices(data);
+    } catch (error: unknown) {
+      clearTimeout(timeout);
+      const msg = (error as Error).name === "AbortError"
+        ? "Server is waking up — please wait a moment and try again."
+        : (error as Error).message || "Failed to load services";
+      setFetchError(msg);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchServices();
-    const interval = setInterval(fetchServices, 10000);
-    return () => clearInterval(interval);
   }, []);
 
   const filteredServices = services.filter((service) => {
@@ -161,7 +167,19 @@ export default function ExploreClient() {
         {loading ? (
           <div className="text-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="text-zinc-500 mt-4 font-medium">Fetching listed services...</p>
+            <p className="text-zinc-500 mt-4 font-medium">Loading services — server may be waking up...</p>
+            <p className="text-zinc-400 text-sm mt-1">This can take up to 30 seconds on first load.</p>
+          </div>
+        ) : fetchError ? (
+          <div className="text-center py-16 bg-white rounded-3xl border border-red-100 shadow-sm">
+            <p className="text-red-500 text-lg font-bold mb-1">⚠️ Could not connect to server</p>
+            <p className="text-zinc-500 text-sm mb-4">{fetchError}</p>
+            <button
+              onClick={fetchServices}
+              className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-xl hover:bg-blue-700 transition-colors"
+            >
+              Try Again
+            </button>
           </div>
         ) : filteredServices.length === 0 ? (
           <div className="text-center py-16 bg-white rounded-3xl border border-zinc-200 shadow-sm">
