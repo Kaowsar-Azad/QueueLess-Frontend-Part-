@@ -27,7 +27,8 @@ export default function ManageServicesPage() {
     if (!session?.user) return;
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/services?ownerId=${session.user.id}`
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/services?ownerId=${session.user.id}`,
+        { credentials: "include" }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch services");
@@ -53,7 +54,7 @@ export default function ManageServicesPage() {
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/services/${id}`,
-        { method: "DELETE" }
+        { method: "DELETE", credentials: "include" }
       );
       if (!response.ok) {
         throw new Error("Failed to delete service");

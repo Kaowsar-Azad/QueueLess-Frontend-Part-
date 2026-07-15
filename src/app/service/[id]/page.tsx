@@ -7,7 +7,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { 
   FiArrowLeft, FiClock, FiUsers, FiMapPin, FiCalendar, FiActivity, 
-  FiStar, FiShield, FiPhone, FiInfo, FiArrowRight 
+  FiStar, FiShield, FiPhone, FiInfo, FiArrowRight, FiSend 
 } from "react-icons/fi";
 
 interface Service {
@@ -20,8 +20,19 @@ interface Service {
   maxTokens: number;
   currentQueue: number;
   totalTokens: number;
+  ownerId?: string;
+  images?: string[];
   address?: string;
   contactNumber?: string;
+}
+
+interface Review {
+  _id: string;
+  userId: string;
+  userName: string;
+  rating: number;
+  comment: string;
+  createdAt: string;
 }
 
 export default function ServiceDetailsPage() {
@@ -31,32 +42,15 @@ export default function ServiceDetailsPage() {
   
   const [service, setService] = useState<Service | null>(null);
   const [relatedServices, setRelatedServices] = useState<Service[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [bookingLoading, setBookingLoading] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  // Mock images based on service categories for high-end look
-  const getMockImages = (category: string) => {
-    if (category === "Hospital") {
-      return [
-        "https://images.unsplash.com/photo-1586773860418-d3b71978563d?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1516549655169-df83a0774514?auto=format&fit=crop&w=800&q=80"
-      ];
-    }
-    if (category === "Bank") {
-      return [
-        "https://images.unsplash.com/photo-1501167786227-4cba60f6d58f?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1541354451442-952615e37787?auto=format&fit=crop&w=800&q=80",
-        "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?auto=format&fit=crop&w=800&q=80"
-      ];
-    }
-    return [
-      "https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1560066984-138dadb4c035?auto=format&fit=crop&w=800&q=80",
-      "https://images.unsplash.com/photo-1503951914875-452162b0f3f1?auto=format&fit=crop&w=800&q=80"
-    ];
-  };
+  // Review form state
+  const [newRating, setNewRating] = useState(5);
+  const [newComment, setNewComment] = useState("");
+  const [submittingReview, setSubmittingReview] = useState(false);
 
   useEffect(() => {
     const fetchServiceDetailsAndRelated = async () => {
@@ -70,6 +64,15 @@ export default function ServiceDetailsPage() {
         }
         const data = await response.json();
         setService(data);
+
+        // Fetch reviews
+        const reviewsRes = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/reviews/service/${id}`
+        );
+        if (reviewsRes.ok) {
+          const reviewsData = await reviewsRes.json();
+          setReviews(reviewsData);
+        }
 
         // Fetch all services to filter out related
         const allRes = await fetch(
@@ -95,6 +98,42 @@ export default function ServiceDetailsPage() {
     }
   }, [id]);
 
+  const handleSubmitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!session?.user) {
+      toast.error("Please login to submit a review");
+      return;
+    }
+    if (!newComment.trim()) return;
+
+    setSubmittingReview(true);
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/reviews`, {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          serviceId: id,
+          userId: session.user.id,
+          userName: session.user.name,
+          rating: newRating,
+          comment: newComment
+        })
+      });
+
+      if (!res.ok) throw new Error("Failed to submit review");
+      const newReview = await res.json();
+      setReviews([newReview, ...reviews]);
+      setNewComment("");
+      setNewRating(5);
+      toast.success("Review submitted!");
+    } catch (error: any) {
+      toast.error(error.message);
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
   const handleBookToken = async () => {
     if (!session?.user) {
       toast.error("Please login to book a token.");
@@ -109,6 +148,7 @@ export default function ServiceDetailsPage() {
         `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/bookings`,
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json"
           },
@@ -164,7 +204,10 @@ export default function ServiceDetailsPage() {
     );
   }
 
-  const images = getMockImages(service.category);
+  const images = service.images && service.images.length > 0 
+    ? service.images 
+    : (service.image ? [service.image] : ["https://placehold.co/800x450?text=No+Image+Available"]);
+  const isOwner = session?.user?.id === service.ownerId;
 
   return (
     <div className="min-h-[85vh] bg-zinc-50 py-10 px-4 sm:px-6 lg:px-8">
@@ -177,7 +220,7 @@ export default function ServiceDetailsPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           
           {/* Left Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className={`${isOwner ? "lg:col-span-3 max-w-3xl mx-auto" : "lg:col-span-2"} space-y-6 w-full`}>
             
             {/* Multi-Image Gallery */}
             <div className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm overflow-hidden p-6">
@@ -188,19 +231,21 @@ export default function ServiceDetailsPage() {
                   className="w-full h-full object-cover transition-all duration-500"
                 />
               </div>
-              <div className="grid grid-cols-3 gap-3 mt-4">
-                {images.map((img, idx) => (
-                  <button 
-                    key={idx}
-                    onClick={() => setActiveImageIndex(idx)}
-                    className={`aspect-[16/9] rounded-xl overflow-hidden border-2 transition-all ${
-                      activeImageIndex === idx ? "border-blue-600 scale-95" : "border-transparent opacity-70 hover:opacity-100"
-                    }`}
-                  >
-                    <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
-                  </button>
-                ))}
-              </div>
+              {images.length > 1 && (
+                <div className="grid grid-cols-3 gap-3 mt-4">
+                  {images.map((img, idx) => (
+                    <button 
+                      key={idx}
+                      onClick={() => setActiveImageIndex(idx)}
+                      className={`aspect-[16/9] rounded-xl overflow-hidden border-2 transition-all ${
+                        activeImageIndex === idx ? "border-blue-600 scale-95" : "border-transparent opacity-70 hover:opacity-100"
+                      }`}
+                    >
+                      <img src={img} alt="Thumbnail" className="w-full h-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Core Info */}
@@ -242,21 +287,58 @@ export default function ServiceDetailsPage() {
               <h3 className="text-lg font-bold text-zinc-800 mb-6 flex items-center gap-2">
                 <FiStar className="text-amber-500 fill-amber-500" /> Customer Reviews & Ratings
               </h3>
+
+              {/* Review Form */}
+              {!isOwner && session?.user && (
+                <form onSubmit={handleSubmitReview} className="mb-8 bg-zinc-50 p-5 rounded-2xl border border-zinc-200">
+                  <h4 className="font-semibold text-zinc-800 mb-3 text-sm">Write a Review</h4>
+                  <div className="flex gap-2 mb-3">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        type="button"
+                        onClick={() => setNewRating(star)}
+                        className={`text-xl transition-colors ${newRating >= star ? "text-amber-500" : "text-zinc-300"}`}
+                      >
+                        <FiStar className={newRating >= star ? "fill-amber-500" : ""} />
+                      </button>
+                    ))}
+                  </div>
+                  <textarea
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    placeholder="Share your experience..."
+                    className="w-full px-4 py-3 rounded-xl border border-zinc-200 focus:ring-2 focus:ring-blue-500 outline-none text-sm mb-3 resize-none h-24"
+                    required
+                  />
+                  <button
+                    type="submit"
+                    disabled={submittingReview}
+                    className="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-semibold transition-colors disabled:opacity-50 flex items-center gap-2"
+                  >
+                    <FiSend /> {submittingReview ? "Posting..." : "Post Review"}
+                  </button>
+                </form>
+              )}
+
+              {/* Review List */}
               <div className="space-y-6">
-                <div className="border-b border-zinc-100 pb-4">
-                  <div className="flex justify-between items-center mb-1">
-                    <h4 className="font-bold text-zinc-800 text-sm">Pranto Chowdhury</h4>
-                    <span className="flex items-center text-amber-500 text-xs font-bold gap-0.5"><FiStar className="fill-amber-500" /> 5.0</span>
-                  </div>
-                  <p className="text-zinc-500 text-xs sm:text-sm">Great scheduling tool! I booked my bank token from home, arrived on time, and only waited for 5 minutes.</p>
-                </div>
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <h4 className="font-bold text-zinc-800 text-sm">Tasnim Ahmed</h4>
-                    <span className="flex items-center text-amber-500 text-xs font-bold gap-0.5"><FiStar className="fill-amber-500" /> 4.5</span>
-                  </div>
-                  <p className="text-zinc-500 text-xs sm:text-sm">Very efficient hospital counter management. Saved me hours of waiting in the lobby.</p>
-                </div>
+                {reviews.length === 0 ? (
+                  <p className="text-zinc-500 text-sm italic">No reviews yet. Be the first to review!</p>
+                ) : (
+                  reviews.map((review) => (
+                    <div key={review._id} className="border-b border-zinc-100 last:border-0 pb-4 last:pb-0">
+                      <div className="flex justify-between items-center mb-1">
+                        <h4 className="font-bold text-zinc-800 text-sm">{review.userName}</h4>
+                        <span className="flex items-center text-amber-500 text-xs font-bold gap-0.5">
+                          <FiStar className="fill-amber-500" /> {review.rating}.0
+                        </span>
+                      </div>
+                      <p className="text-zinc-500 text-xs sm:text-sm">{review.comment}</p>
+                      <p className="text-zinc-400 text-[10px] mt-2">{new Date(review.createdAt).toLocaleDateString()}</p>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
 
@@ -285,36 +367,40 @@ export default function ServiceDetailsPage() {
           </div>
 
           {/* Right Live Status Panel */}
-          <div className="space-y-6">
-            <div className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm p-6 text-center sticky top-24">
-              <h3 className="text-lg font-bold text-zinc-800 border-b border-zinc-100 pb-3 mb-6">Live Queue Tracker</h3>
-              
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl">
-                  <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wider">Serving Token</p>
-                  <p className="text-3xl font-extrabold text-blue-900 mt-1">#{service.currentQueue || 0}</p>
+          {!isOwner && (
+            <div className="space-y-6">
+              <div className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm p-6 text-center sticky top-24">
+                <h3 className="text-lg font-bold text-zinc-800 border-b border-zinc-100 pb-3 mb-6">Live Queue Tracker</h3>
+                
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl">
+                    <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wider">Serving Token</p>
+                    <p className="text-3xl font-extrabold text-blue-900 mt-1">#{service.currentQueue || 0}</p>
+                  </div>
+
+                  <div className="bg-zinc-50 border border-zinc-100 p-4 rounded-2xl">
+                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Booked Today</p>
+                    <p className="text-3xl font-extrabold text-zinc-800 mt-1">#{service.totalTokens}</p>
+                  </div>
                 </div>
 
-                <div className="bg-zinc-50 border border-zinc-100 p-4 rounded-2xl">
-                  <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Booked Today</p>
-                  <p className="text-3xl font-extrabold text-zinc-800 mt-1">#{service.totalTokens}</p>
-                </div>
+                <>
+                  <button
+                    onClick={handleBookToken}
+                    disabled={bookingLoading || service.totalTokens >= service.maxTokens}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-md shadow-blue-600/25 disabled:opacity-50 flex items-center justify-center gap-2"
+                  >
+                    <FiCalendar className="text-lg" /> 
+                    {bookingLoading ? "Booking..." : service.totalTokens >= service.maxTokens ? "Queue Full" : "Book Token Now"}
+                  </button>
+
+                  <p className="text-[11px] text-zinc-400 mt-3">
+                    Requires login. Valid only for today.
+                  </p>
+                </>
               </div>
-
-              <button
-                onClick={handleBookToken}
-                disabled={bookingLoading || service.totalTokens >= service.maxTokens}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-md shadow-blue-600/25 disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                <FiCalendar className="text-lg" /> 
-                {bookingLoading ? "Booking..." : service.totalTokens >= service.maxTokens ? "Queue Full" : "Book Token Now"}
-              </button>
-
-              <p className="text-[11px] text-zinc-400 mt-3">
-                Requires login. Valid only for today.
-              </p>
             </div>
-          </div>
+          )}
 
         </div>
 

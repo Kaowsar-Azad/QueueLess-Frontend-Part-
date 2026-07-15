@@ -32,7 +32,8 @@ export default function UserDashboard() {
     if (!session?.user) return;
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/bookings?userId=${session.user.id}`
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/bookings?userId=${session.user.id}`,
+        { credentials: "include" }
       );
       if (!response.ok) {
         throw new Error("Failed to fetch tickets");
@@ -60,6 +61,7 @@ export default function UserDashboard() {
         `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api"}/bookings/${id}`,
         {
           method: "PATCH",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json"
           },

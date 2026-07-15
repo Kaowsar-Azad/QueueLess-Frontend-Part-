@@ -10,6 +10,8 @@ interface Service {
   name: string;
   description: string;
   category: string;
+  image?: string;
+  images?: string[];
   startHour: string;
   endHour: string;
   maxTokens: number;
@@ -21,6 +23,7 @@ export default function ExplorePage() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("All");
+  const [availabilityFilter, setAvailabilityFilter] = useState("All");
   const [sortBy, setSortBy] = useState("name-asc");
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 6;
@@ -48,7 +51,9 @@ export default function ExplorePage() {
     const matchesSearch = service.name.toLowerCase().includes(search.toLowerCase()) || 
                           service.description.toLowerCase().includes(search.toLowerCase());
     const matchesCategory = categoryFilter === "All" || service.category === categoryFilter;
-    return matchesSearch && matchesCategory;
+    const matchesAvailability = availabilityFilter === "All" || 
+      (availabilityFilter === "Available" ? service.totalTokens < service.maxTokens : service.totalTokens >= service.maxTokens);
+    return matchesSearch && matchesCategory && matchesAvailability;
   });
 
   // Sort services
@@ -70,7 +75,7 @@ export default function ExplorePage() {
   // Reset page on search/filter changes
   useEffect(() => {
     setCurrentPage(1);
-  }, [search, categoryFilter, sortBy]);
+  }, [search, categoryFilter, availabilityFilter, sortBy]);
 
   return (
     <div className="min-h-[85vh] bg-zinc-50 py-10 px-4 sm:px-6 lg:px-8">
@@ -113,6 +118,33 @@ export default function ExplorePage() {
                 <option value="Other">Others</option>
               </select>
             </div>
+
+            <div className="flex gap-2 items-center">
+              <span className="text-sm font-semibold text-zinc-500">Status:</span>
+              <select
+                value={availabilityFilter}
+                onChange={(e) => setAvailabilityFilter(e.target.value)}
+                className="px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-zinc-900 font-medium"
+              >
+                <option value="All">All Status</option>
+                <option value="Available">Available Slots</option>
+                <option value="Full">Queue Full</option>
+              </select>
+            </div>
+
+            <div className="flex gap-2 items-center">
+              <span className="text-sm font-semibold text-zinc-500">Sort By:</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-zinc-900 font-medium"
+              >
+                <option value="name-asc">Name (A-Z)</option>
+                <option value="name-desc">Name (Z-A)</option>
+                <option value="limit-desc">Max Slots (High to Low)</option>
+                <option value="limit-asc">Max Slots (Low to High)</option>
+              </select>
+            </div>
           </div>
         </div>
 
@@ -142,10 +174,21 @@ export default function ExplorePage() {
                     </span>
                     
                     {/* Title & Desc */}
-                    <h3 className="text-xl font-bold text-zinc-900 tracking-tight mb-2">{service.name}</h3>
-                    <p className="text-zinc-500 text-sm line-clamp-3 mb-6 leading-relaxed">
-                      {service.description}
-                    </p>
+                    <div className="flex items-start gap-4 mb-4">
+                      {(service.images && service.images.length > 0) || service.image ? (
+                        <img 
+                          src={(service.images && service.images.length > 0) ? service.images[0] : service.image} 
+                          alt={service.name} 
+                          className="w-16 h-16 rounded-xl object-cover border border-zinc-200 shrink-0"
+                        />
+                      ) : null}
+                      <div>
+                        <h3 className="text-xl font-bold text-zinc-900 tracking-tight mb-1">{service.name}</h3>
+                        <p className="text-zinc-500 text-sm line-clamp-2 leading-relaxed">
+                          {service.description}
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   <div className="border-t border-zinc-100 pt-5 space-y-4">
