@@ -45,6 +45,8 @@ export default function ExplorePage() {
     };
 
     fetchServices();
+    const interval = setInterval(fetchServices, 10000);
+    return () => clearInterval(interval);
   }, []);
 
   const filteredServices = services.filter((service) => {

@@ -96,6 +96,8 @@ export default function ServiceDetailsPage() {
 
     if (id) {
       fetchServiceDetailsAndRelated();
+      const interval = setInterval(fetchServiceDetailsAndRelated, 5000);
+      return () => clearInterval(interval);
     }
   }, [id]);
 
@@ -301,7 +303,7 @@ export default function ServiceDetailsPage() {
                         key={star}
                         type="button"
                         onClick={() => setNewRating(star)}
-                        className={`text-xl transition-colors ${newRating >= star ? "text-amber-500" : "text-zinc-300"}`}
+                        className={`text-2xl p-1 transition-colors ${newRating >= star ? "text-amber-500" : "text-zinc-300"}`}
                       >
                         <FiStar className={newRating >= star ? "fill-amber-500" : ""} />
                       </button>
