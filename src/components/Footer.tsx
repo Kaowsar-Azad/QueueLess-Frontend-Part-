@@ -23,16 +23,10 @@ export default function Footer() {
               Smart appointment & queue management system. Say goodbye to long waiting lines and book your slots online with real-time tracking.
             </p>
             <div className="flex space-x-3">
-              <a href="#" className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-blue-600 hover:border-blue-600 transition-all duration-300">
-                <FaFacebook size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-blue-400 hover:border-blue-400 transition-all duration-300">
+              <a href="https://x.com/pranto17297" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-blue-400 hover:border-blue-400 transition-all duration-300">
                 <FaTwitter size={18} />
               </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-pink-600 hover:border-pink-600 transition-all duration-300">
-                <FaInstagram size={18} />
-              </a>
-              <a href="#" className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-blue-700 hover:border-blue-700 transition-all duration-300">
+              <a href="https://www.linkedin.com/in/kaowsar-azad" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-blue-700 hover:border-blue-700 transition-all duration-300">
                 <FaLinkedin size={18} />
               </a>
             </div>

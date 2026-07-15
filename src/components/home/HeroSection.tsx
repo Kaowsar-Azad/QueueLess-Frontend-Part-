@@ -1,15 +1,20 @@
 "use client";
 
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { FiSearch } from "react-icons/fi";
 import { toast } from "react-toastify";
 
 export default function HeroSection() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const router = useRouter();
+
   const handleSearch = () => {
-    toast.info("Searching for nearby queues...", {
-      position: "bottom-right",
-      autoClose: 3000,
-      theme: "colored",
-    });
+    if (searchQuery.trim()) {
+      router.push(`/explore?search=${encodeURIComponent(searchQuery.trim())}`);
+    } else {
+      router.push("/explore");
+    }
   };
 
   return (
@@ -36,6 +41,9 @@ export default function HeroSection() {
             <input 
               type="text" 
               placeholder="Search hospitals, banks, saloons..." 
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
               className="w-full bg-transparent outline-none text-zinc-700 placeholder-zinc-400"
             />
           </div>

@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { FiSearch, FiTag, FiClock, FiUsers, FiArrowRight } from "react-icons/fi";
+import { calculateWaitMetrics } from "@/lib/queueUtils";
 
 interface Service {
   _id: string;
@@ -16,12 +18,17 @@ interface Service {
   endHour: string;
   maxTokens: number;
   totalTokens: number;
+  currentQueue: number;
+  averageTimePerToken?: number;
 }
 
 export default function ExplorePage() {
+  const searchParams = useSearchParams();
+  const initialSearch = searchParams.get("search") || "";
+  
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState("");
+  const [search, setSearch] = useState(initialSearch);
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [availabilityFilter, setAvailabilityFilter] = useState("All");
   const [sortBy, setSortBy] = useState("name-asc");
@@ -165,16 +172,23 @@ export default function ExplorePage() {
         ) : (
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-              {paginatedServices.map((service) => (
+              {paginatedServices.map((service) => {
+                const metrics = calculateWaitMetrics(service.totalTokens, service.currentQueue, service.averageTimePerToken || 20);
+                return (
                 <div 
                   key={service._id}
                   className="bg-white rounded-3xl border border-zinc-200/80 hover:border-blue-200 p-6 flex flex-col justify-between hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
                 >
                   <div>
-                    {/* Category Tag */}
-                    <span className="inline-block text-xs bg-blue-50 text-blue-700 font-bold px-3 py-1 rounded-full mb-4">
-                      {service.category}
-                    </span>
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      <span className="inline-block text-xs bg-blue-50 text-blue-700 font-bold px-3 py-1 rounded-full">
+                        {service.category}
+                      </span>
+                      <span className={`inline-block text-xs font-bold px-3 py-1 rounded-full ${metrics.statusColor}`}>
+                        {metrics.trafficStatus}
+                      </span>
+                    </div>
                     
                     {/* Title & Desc */}
                     <div className="flex items-start gap-4 mb-4">
@@ -214,7 +228,8 @@ export default function ExplorePage() {
                     </Link>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Pagination Controls */}

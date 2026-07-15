@@ -25,12 +25,14 @@ export default function AddServicePage() {
   const [address, setAddress] = useState("");
   const [contactNumber, setContactNumber] = useState("");
 
+  const [averageTimePerToken, setAverageTimePerToken] = useState("20");
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!session?.user) {
       return toast.error("Please login to create a service.");
     }
-    if (!name || !description || !category || !startHour || !endHour || !maxTokens || !address || !contactNumber) {
+    if (!name || !description || !category || !startHour || !endHour || !maxTokens || !address || !contactNumber || !averageTimePerToken) {
       return toast.error("Please fill in all fields.");
     }
 
@@ -79,7 +81,8 @@ export default function AddServicePage() {
           startHour,
           endHour,
           images: finalImageUrls,
-          maxTokens: parseInt(maxTokens)
+          maxTokens: parseInt(maxTokens),
+          averageTimePerToken: parseInt(averageTimePerToken)
         })
       });
 
@@ -242,7 +245,7 @@ export default function AddServicePage() {
               )}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <label className="block text-sm font-semibold text-zinc-800 mb-2">Category</label>
                 <div className="relative">
@@ -264,7 +267,7 @@ export default function AddServicePage() {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-zinc-800 mb-2">Max Daily Tokens / Slots</label>
+                <label className="block text-sm font-semibold text-zinc-800 mb-2">Max Daily Tokens</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
                     <FiUsers />
@@ -275,6 +278,22 @@ export default function AddServicePage() {
                     onChange={(e) => setMaxTokens(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-zinc-900" 
                     placeholder="50"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-zinc-800 mb-2">Avg. Wait (Mins)</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-zinc-400">
+                    <FiClock />
+                  </div>
+                  <input 
+                    type="number" 
+                    value={averageTimePerToken || ""} 
+                    onChange={(e) => setAverageTimePerToken(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-zinc-900" 
+                    placeholder="20"
                   />
                 </div>
               </div>

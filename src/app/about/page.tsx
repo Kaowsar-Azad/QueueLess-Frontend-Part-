@@ -3,8 +3,12 @@
 import Link from "next/link";
 import { FiUsers, FiTarget, FiHeart, FiGlobe } from "react-icons/fi";
 import { MdOutlineQueuePlayNext } from "react-icons/md";
+import { useSession } from "@/lib/auth-client";
 
 export default function AboutPage() {
+  const { data: session } = useSession();
+  const role = session?.user ? (session.user as { role?: string }).role || "user" : null;
+
   const values = [
     {
       icon: <FiTarget className="text-blue-600" />,
@@ -72,9 +76,15 @@ export default function AboutPage() {
             Join thousands of users who have already switched to a smarter way of managing their appointments and hospital visits.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl transition-colors shadow-lg shadow-blue-600/30">
-              Create Free Account
-            </Link>
+            {session?.user ? (
+              <Link href={`/dashboard/${role}`} className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl transition-colors shadow-lg shadow-blue-600/30">
+                Go to Dashboard
+              </Link>
+            ) : (
+              <Link href="/register" className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-xl transition-colors shadow-lg shadow-blue-600/30">
+                Create Free Account
+              </Link>
+            )}
             <Link href="/explore" className="bg-zinc-800 hover:bg-zinc-700 border border-zinc-700 text-white font-bold py-4 px-8 rounded-xl transition-colors">
               Explore Services
             </Link>

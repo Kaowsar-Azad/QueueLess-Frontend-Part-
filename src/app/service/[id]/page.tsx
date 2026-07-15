@@ -294,7 +294,7 @@ export default function ServiceDetailsPage() {
               </h3>
 
               {/* Review Form */}
-              {!isOwner && session?.user && (
+              {!isOwner && session?.user && !reviews.some(r => r.userId === session.user.id) && (
                 <form onSubmit={handleSubmitReview} className="mb-8 bg-zinc-50 p-5 rounded-2xl border border-zinc-200">
                   <h4 className="font-semibold text-zinc-800 mb-3 text-sm">Write a Review</h4>
                   <div className="flex gap-2 mb-3">

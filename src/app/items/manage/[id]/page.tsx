@@ -21,6 +21,7 @@ interface Service {
   ownerId: string;
   currentQueue: number;
   totalTokens: number;
+  averageTimePerToken: number;
 }
 
 interface PageProps {
@@ -150,7 +151,7 @@ export default function ServiceBookingsPage({ params }: PageProps) {
         </Link>
 
         {/* Dashboard Header Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm p-6">
             <span className="text-xs font-bold text-zinc-400 uppercase">Service Name</span>
             <h1 className="text-xl font-black text-zinc-900 mt-1 truncate">{service.name}</h1>
@@ -173,6 +174,16 @@ export default function ServiceBookingsPage({ params }: PageProps) {
             </div>
             <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
               <FiCheck className="text-xl" />
+            </div>
+          </div>
+
+          <div className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm p-6 flex items-center justify-between">
+            <div>
+              <span className="text-xs font-bold text-zinc-400 uppercase">Avg Wait / Token</span>
+              <p className="text-3xl font-black text-amber-500 mt-1">{service.averageTimePerToken || 20} <span className="text-sm font-bold text-zinc-400">mins</span></p>
+            </div>
+            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center">
+              <span className="text-xl">⏱️</span>
             </div>
           </div>
         </div>

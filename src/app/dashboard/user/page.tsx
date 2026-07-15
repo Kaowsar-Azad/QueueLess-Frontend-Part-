@@ -5,6 +5,7 @@ import { useSession } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { FiClock, FiXCircle, FiActivity } from "react-icons/fi";
+import { calculateWaitMetrics } from "@/lib/queueUtils";
 
 interface Booking {
   _id: string;
@@ -18,6 +19,8 @@ interface Booking {
     startHour: string;
     endHour: string;
     currentQueue: number;
+    totalTokens: number;
+    averageTimePerToken?: number;
   };
 }
 
@@ -154,9 +157,19 @@ export default function UserDashboard() {
                       </div>
 
                       <div className="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between">
-                        <span className="text-xs bg-emerald-50 text-emerald-700 font-bold px-3 py-1 rounded-full">
-                          Active Wait
-                        </span>
+                        {(() => {
+                          const metrics = calculateWaitMetrics(
+                            ticket.serviceId?.totalTokens || 0,
+                            ticket.serviceId?.currentQueue || 0,
+                            ticket.serviceId?.averageTimePerToken || 20,
+                            ticket.tokenNumber
+                          );
+                          return (
+                            <span className={`text-xs font-bold px-3 py-1 rounded-full ${metrics.statusColor}`}>
+                              Wait: {metrics.formattedWaitTime}
+                            </span>
+                          );
+                        })()}
                         
                         <button
                           onClick={() => handleCancelBooking(ticket._id)}
