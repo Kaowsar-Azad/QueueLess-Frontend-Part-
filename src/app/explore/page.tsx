@@ -113,20 +113,6 @@ export default function ExplorePage() {
                 <option value="Other">Others</option>
               </select>
             </div>
-
-            <div className="flex gap-2 items-center">
-              <span className="text-sm font-semibold text-zinc-500">Sort:</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-3 bg-zinc-50 border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none text-zinc-900 font-medium"
-              >
-                <option value="name-asc">Name (A-Z)</option>
-                <option value="name-desc">Name (Z-A)</option>
-                <option value="limit-desc">Limit (High to Low)</option>
-                <option value="limit-asc">Limit (Low to High)</option>
-              </select>
-            </div>
           </div>
         </div>
 

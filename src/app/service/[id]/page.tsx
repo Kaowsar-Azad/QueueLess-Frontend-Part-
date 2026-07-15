@@ -20,6 +20,8 @@ interface Service {
   maxTokens: number;
   currentQueue: number;
   totalTokens: number;
+  address?: string;
+  contactNumber?: string;
 }
 
 export default function ServiceDetailsPage() {
@@ -217,11 +219,11 @@ export default function ServiceDetailsPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-zinc-600">
                   <div className="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl">
                     <FiMapPin className="text-blue-500 flex-shrink-0" />
-                    <span>Location: Main Town Branch, Dhaka</span>
+                    <span>Location: {service.address || "Main Town Branch, Dhaka"}</span>
                   </div>
                   <div className="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl">
                     <FiPhone className="text-blue-500 flex-shrink-0" />
-                    <span>Contact Support: +880 1234-567890</span>
+                    <span>Contact Support: {service.contactNumber || "+880 1234-567890"}</span>
                   </div>
                   <div className="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl">
                     <FiClock className="text-blue-500 flex-shrink-0" />

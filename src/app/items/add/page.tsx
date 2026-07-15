@@ -18,13 +18,15 @@ export default function AddServicePage() {
   const [startHour, setStartHour] = useState("09:00");
   const [endHour, setEndHour] = useState("17:00");
   const [maxTokens, setMaxTokens] = useState("50");
+  const [address, setAddress] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!session?.user) {
       return toast.error("Please login to create a service.");
     }
-    if (!name || !description || !category || !startHour || !endHour || !maxTokens) {
+    if (!name || !description || !category || !startHour || !endHour || !maxTokens || !address || !contactNumber) {
       return toast.error("Please fill in all fields.");
     }
 
@@ -42,6 +44,8 @@ export default function AddServicePage() {
           category,
           ownerId: session.user.id,
           ownerName: session.user.name,
+          address,
+          contactNumber,
           startHour,
           endHour,
           maxTokens: parseInt(maxTokens)
@@ -97,6 +101,30 @@ export default function AddServicePage() {
                 className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-zinc-900" 
                 placeholder="Describe your service, location, or requirements for booking..."
               />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-semibold text-zinc-800 mb-2">Full Address</label>
+                <input 
+                  type="text" 
+                  value={address} 
+                  onChange={(e) => setAddress(e.target.value)}
+                  className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-zinc-900" 
+                  placeholder="e.g. Level 4, QueueLess Tower, Banani"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-zinc-800 mb-2">Contact Number</label>
+                <input 
+                  type="text" 
+                  value={contactNumber} 
+                  onChange={(e) => setContactNumber(e.target.value)}
+                  className="w-full px-4 py-3 bg-white border border-zinc-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-shadow text-zinc-900" 
+                  placeholder="+880 1234-567890"
+                />
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
