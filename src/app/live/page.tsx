@@ -77,12 +77,31 @@ export default function LiveStatusPage() {
     }
   }, [session?.user, fetchActiveBookings]);
 
-  if (isPending || loading) {
+  if (isPending || (loading && bookings.length === 0)) {
     return (
-      <div className="min-h-[85vh] bg-zinc-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="text-zinc-500 mt-4 font-semibold">Loading live queue status...</p>
+      <div className="min-h-[85vh] bg-zinc-50 py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="flex justify-between items-center mb-8">
+            <div>
+              <h1 className="text-3xl font-black text-zinc-900 tracking-tight">Live Status</h1>
+              <p className="text-zinc-505 text-zinc-500 mt-1">Real-time status of your active tickets.</p>
+            </div>
+            <div className="h-10 bg-white border border-zinc-200/80 w-24 rounded-xl animate-pulse"></div>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            {[...Array(2)].map((_, idx) => (
+              <div key={idx} className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm relative overflow-hidden flex flex-col animate-pulse">
+                <div className="h-40 w-full bg-zinc-200 shrink-0"></div>
+                <div className="p-6 flex flex-col flex-1 space-y-6">
+                  <div className="h-16 bg-zinc-100 rounded-2xl w-full"></div>
+                  <div className="grid grid-cols-2 gap-4 mt-auto">
+                    <div className="bg-zinc-50 p-4 rounded-2xl h-20"></div>
+                    <div className="bg-zinc-50 p-4 rounded-2xl h-20"></div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );

@@ -98,9 +98,24 @@ export default function ManageServicesPage() {
           </div>
 
           {loading ? (
-            <div className="text-center py-10">
-              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-              <p className="text-zinc-500 mt-4">Loading your services...</p>
+            <div className="space-y-4">
+              {[...Array(3)].map((_, idx) => (
+                <div key={idx} className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 bg-zinc-50/55 rounded-2xl border border-zinc-200/60 animate-pulse">
+                  <div className="space-y-3 flex-1">
+                    <div className="h-5 bg-zinc-200 rounded-full w-20"></div>
+                    <div className="h-6 bg-zinc-200 rounded w-1/3"></div>
+                    <div className="h-4 bg-zinc-200 rounded w-1/2"></div>
+                    <div className="flex gap-4 pt-1">
+                      <div className="h-4 bg-zinc-200 rounded w-24"></div>
+                      <div className="h-4 bg-zinc-200 rounded w-24"></div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2 mt-4 sm:mt-0 shrink-0">
+                    <div className="h-10 bg-zinc-200 rounded-xl w-28"></div>
+                    <div className="h-10 bg-zinc-200 rounded-xl w-10"></div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : services.length === 0 ? (
             <div className="text-center py-12 bg-zinc-50 rounded-2xl border border-dashed border-zinc-200">

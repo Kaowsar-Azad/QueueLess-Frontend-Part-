@@ -171,10 +171,37 @@ export default function ExploreClient() {
 
         {/* Directory Grid */}
         {loading ? (
-          <div className="text-center py-20">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="text-zinc-500 mt-4 font-medium">Loading services — server may be waking up...</p>
-            <p className="text-zinc-400 text-sm mt-1">This can take up to 30 seconds on first load.</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+            {[...Array(6)].map((_, idx) => (
+              <div 
+                key={idx}
+                className="bg-white rounded-3xl border border-zinc-200/80 p-6 flex flex-col justify-between animate-pulse"
+              >
+                <div>
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    <div className="h-6 bg-zinc-200 rounded-full w-16"></div>
+                    <div className="h-6 bg-zinc-200 rounded-full w-20"></div>
+                  </div>
+                  
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="w-16 h-16 rounded-xl bg-zinc-200 shrink-0"></div>
+                    <div className="flex-1 space-y-2">
+                      <div className="h-5 bg-zinc-200 rounded-md w-3/4"></div>
+                      <div className="h-4 bg-zinc-200 rounded-md w-full"></div>
+                      <div className="h-4 bg-zinc-200 rounded-md w-5/6"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="border-t border-zinc-100 pt-5 space-y-4">
+                  <div className="flex justify-between">
+                    <div className="h-4 bg-zinc-200 rounded w-1/3"></div>
+                    <div className="h-4 bg-zinc-200 rounded w-1/3"></div>
+                  </div>
+                  <div className="h-12 bg-zinc-200 rounded-xl w-full"></div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : fetchError ? (
           <div className="text-center py-16 bg-white rounded-3xl border border-red-100 shadow-sm">

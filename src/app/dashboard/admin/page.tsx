@@ -65,9 +65,13 @@ export default function AdminDashboard() {
         </div>
 
         {loading ? (
-          <div className="text-center py-20">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="text-zinc-500 mt-4">Fetching live analytics...</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            {[...Array(3)].map((_, idx) => (
+              <div key={idx} className="bg-zinc-50 border border-zinc-200 rounded-2xl p-6 space-y-3 animate-pulse">
+                <div className="h-4 bg-zinc-200 rounded w-1/2"></div>
+                <div className="h-10 bg-zinc-200 rounded w-1/3"></div>
+              </div>
+            ))}
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">

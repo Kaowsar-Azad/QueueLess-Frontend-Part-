@@ -106,9 +106,24 @@ export default function UserDashboard() {
         </div>
 
         {loading ? (
-          <div className="text-center py-20 bg-white rounded-3xl border border-zinc-200/80 shadow-sm">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="text-zinc-500 mt-4">Loading your tickets...</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[...Array(2)].map((_, idx) => (
+              <div key={idx} className="bg-white rounded-3xl border border-zinc-200/80 p-6 flex flex-col justify-between animate-pulse">
+                <div className="space-y-4">
+                  <div className="h-5 bg-zinc-200 rounded-full w-16"></div>
+                  <div className="h-6 bg-zinc-200 rounded w-2/3"></div>
+                  
+                  <div className="flex flex-col gap-2 pt-2 border-t border-zinc-100">
+                    <div className="h-4 bg-zinc-200 rounded w-1/2"></div>
+                    <div className="h-4 bg-zinc-200 rounded w-1/3"></div>
+                  </div>
+                </div>
+                <div className="mt-6 pt-4 border-t border-zinc-100 flex items-center justify-between">
+                  <div className="h-6 bg-zinc-200 rounded-full w-24"></div>
+                  <div className="h-6 bg-zinc-200 rounded w-16"></div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : bookings.length === 0 ? (
           <div className="bg-white border border-zinc-200/80 rounded-3xl p-12 text-center shadow-sm">

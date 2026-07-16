@@ -53,8 +53,30 @@ export default function FeaturedServices() {
         </div>
 
         {loading ? (
-          <div className="flex justify-center items-center py-12">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, idx) => (
+              <div key={idx} className="bg-white border border-zinc-200 rounded-2xl overflow-hidden animate-pulse">
+                <div className="h-40 w-full bg-zinc-200"></div>
+                <div className="p-6 space-y-4">
+                  <div className="h-5 bg-zinc-200 rounded-md w-1/3"></div>
+                  <div className="h-6 bg-zinc-200 rounded-md w-3/4"></div>
+                  <div className="h-4 bg-zinc-200 rounded-md w-1/2"></div>
+                  
+                  <div className="bg-zinc-50 p-4 rounded-xl flex justify-between items-center border border-zinc-100">
+                    <div className="space-y-2 flex-1">
+                      <div className="h-3 bg-zinc-200 rounded w-1/2"></div>
+                      <div className="h-5 bg-zinc-200 rounded w-1/3"></div>
+                    </div>
+                    <div className="space-y-2 flex-1 items-end flex flex-col">
+                      <div className="h-3 bg-zinc-200 rounded w-1/2"></div>
+                      <div className="h-4 bg-zinc-200 rounded w-2/3"></div>
+                    </div>
+                  </div>
+                  
+                  <div className="h-10 bg-zinc-200 rounded-xl w-full"></div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : services.length === 0 ? (
           <div className="text-center py-12 bg-zinc-50 rounded-2xl border border-dashed border-zinc-200">

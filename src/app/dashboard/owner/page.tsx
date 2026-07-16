@@ -97,9 +97,25 @@ export default function OwnerDashboard() {
 
         {/* Loading / Empty / Content */}
         {loading ? (
-          <div className="bg-white rounded-3xl border border-zinc-200/80 p-12 text-center shadow-sm">
-            <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="text-zinc-500 mt-4 font-semibold">Loading active queues...</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[...Array(2)].map((_, idx) => (
+              <div key={idx} className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm p-6 space-y-6 animate-pulse">
+                <div className="flex justify-between items-start">
+                  <div className="h-6 bg-zinc-200 rounded w-1/2"></div>
+                  <div className="h-5 bg-zinc-200 rounded-full w-16"></div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-zinc-50 border border-zinc-100 p-4 rounded-2xl h-20"></div>
+                  <div className="bg-zinc-50 border border-zinc-100 p-4 rounded-2xl h-20"></div>
+                </div>
+                
+                <div className="flex gap-3 border-t border-zinc-100 pt-4">
+                  <div className="flex-1 h-12 bg-zinc-200 rounded-xl"></div>
+                  <div className="w-12 h-12 bg-zinc-200 rounded-xl"></div>
+                </div>
+              </div>
+            ))}
           </div>
         ) : services.length === 0 ? (
           <div className="bg-white rounded-3xl border border-zinc-200/80 p-16 text-center shadow-sm">

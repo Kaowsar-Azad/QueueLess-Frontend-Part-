@@ -120,10 +120,36 @@ export default function ServiceBookingsPage({ params }: PageProps) {
 
   if (loading) {
     return (
-      <div className="min-h-[85vh] flex items-center justify-center bg-zinc-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="text-zinc-500 mt-4 font-medium">Loading bookings data...</p>
+      <div className="min-h-[85vh] bg-zinc-50 py-10 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-5xl mx-auto">
+          <div className="inline-flex items-center text-sm font-medium text-zinc-300 mb-6 animate-pulse">
+            <FiArrowLeft className="mr-2" /> Back to Manage Services
+          </div>
+
+          {/* Dashboard Header Stats Skeletons */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            {[...Array(4)].map((_, idx) => (
+              <div key={idx} className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm p-6 space-y-3 animate-pulse">
+                <div className="h-3 bg-zinc-200 rounded w-1/2"></div>
+                <div className="h-8 bg-zinc-200 rounded w-3/4"></div>
+              </div>
+            ))}
+          </div>
+
+          {/* Table Skeletons */}
+          <div className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm p-8 space-y-6 animate-pulse">
+            <div className="h-6 bg-zinc-200 rounded w-1/4"></div>
+            <div className="space-y-4">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="flex justify-between items-center py-4 border-b border-zinc-100 last:border-0">
+                  <div className="h-5 bg-zinc-200 rounded w-12"></div>
+                  <div className="h-5 bg-zinc-200 rounded w-1/3"></div>
+                  <div className="h-5 bg-zinc-200 rounded w-24"></div>
+                  <div className="h-8 bg-zinc-200 rounded w-20"></div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );
