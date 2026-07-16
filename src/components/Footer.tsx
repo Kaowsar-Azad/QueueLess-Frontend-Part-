@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaTwitter, FaLinkedinIn } from "react-icons/fa";
+import { FaTwitter, FaLinkedin } from "react-icons/fa";
 import { MdOutlineQueuePlayNext } from "react-icons/md";
 
 export default function Footer() {
