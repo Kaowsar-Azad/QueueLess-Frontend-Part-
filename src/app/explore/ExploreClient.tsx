@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { toast } from "react-toastify";
 import { FiSearch, FiTag, FiClock, FiUsers, FiArrowRight } from "react-icons/fi";
 import { calculateWaitMetrics } from "@/lib/queueUtils";
 import { formatTime } from "@/lib/timeUtils";
@@ -60,7 +59,11 @@ export default function ExploreClient() {
   };
 
   useEffect(() => {
-    fetchServices();
+    // Avoid synchronous state updates inside useEffect
+    setTimeout(() => {
+      fetchServices();
+    }, 0);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const filteredServices = services.filter((service) => {
@@ -90,7 +93,9 @@ export default function ExploreClient() {
 
   // Reset page on search/filter changes
   useEffect(() => {
-    setCurrentPage(1);
+    setTimeout(() => {
+      setCurrentPage(1);
+    }, 0);
   }, [search, categoryFilter, availabilityFilter, sortBy]);
 
   return (

@@ -52,8 +52,12 @@ export default function RegisterPage() {
         toast.success("Registration successful! Please login.");
         router.push("/login");
       }
-    } catch (err: any) {
-      toast.error(err?.message || "Network error: Could not connect to the server.");
+    } catch (err: unknown) {
+      if (err instanceof Error) {
+        toast.error(err.message || "Network error: Could not connect to the server.");
+      } else {
+        toast.error("Network error: Could not connect to the server.");
+      }
     } finally {
       setLoading(false);
     }
