@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { FaTwitter, FaLinkedin } from "react-icons/fa";
+import { FaTwitter, FaLinkedin, FaHeart } from "react-icons/fa";
 import { MdOutlineQueuePlayNext } from "react-icons/md";
 
 export default function Footer() {
@@ -12,7 +12,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 lg:gap-8">
           
           
-          <div className="col-span-1 md:col-span-12 lg:col-span-5">
+          <div className="col-span-1 md:col-span-12 lg:col-span-6">
             <div className="flex items-center mb-6">
               <div className="w-10 h-10 bg-blue-600/10 rounded-xl flex items-center justify-center mr-3 border border-blue-500/20">
                 <MdOutlineQueuePlayNext className="text-2xl text-blue-500" />
@@ -32,33 +32,22 @@ export default function Footer() {
             </div>
           </div>
           
-          <div className="col-span-1 md:col-span-4 lg:col-span-2 lg:col-start-7">
-            <h3 className="text-white font-semibold text-lg mb-6">Company</h3>
+          <div className="col-span-1 md:col-span-6 lg:col-span-3 lg:col-start-8">
+            <h3 className="text-white font-semibold text-lg mb-6">Quick Links</h3>
             <ul className="space-y-4">
-              <li><Link href="/" className="hover:text-blue-400 transition-colors">About Us</Link></li>
-              <li><Link href="/explore" className="hover:text-blue-400 transition-colors">Our Services</Link></li>
-              <li><Link href="/" className="hover:text-blue-400 transition-colors">Careers</Link></li>
-              <li><Link href="/" className="hover:text-blue-400 transition-colors">Contact</Link></li>
+              <li><Link href="/" className="hover:text-blue-400 transition-colors">Home</Link></li>
+              <li><Link href="/explore" className="hover:text-blue-400 transition-colors">Explore Services</Link></li>
+              <li><Link href="/about" className="hover:text-blue-400 transition-colors">About Us</Link></li>
+              <li><Link href="/contact" className="hover:text-blue-400 transition-colors">Contact</Link></li>
             </ul>
           </div>
 
           {/* Legal */}
-          <div className="col-span-1 md:col-span-4 lg:col-span-2">
+          <div className="col-span-1 md:col-span-6 lg:col-span-2">
             <h3 className="text-white font-semibold text-lg mb-6">Legal</h3>
             <ul className="space-y-4">
               <li><Link href="/" className="hover:text-blue-400 transition-colors">Terms of Service</Link></li>
               <li><Link href="/" className="hover:text-blue-400 transition-colors">Privacy Policy</Link></li>
-              <li><Link href="/" className="hover:text-blue-400 transition-colors">Cookie Policy</Link></li>
-            </ul>
-          </div>
-          
-          {/* Support */}
-          <div className="col-span-1 md:col-span-4 lg:col-span-2">
-            <h3 className="text-white font-semibold text-lg mb-6">Support</h3>
-            <ul className="space-y-4">
-              <li><Link href="/" className="hover:text-blue-400 transition-colors">Help Center</Link></li>
-              <li><Link href="/" className="hover:text-blue-400 transition-colors">FAQs</Link></li>
-              <li><Link href="/" className="hover:text-blue-400 transition-colors">Community</Link></li>
             </ul>
           </div>
           
@@ -68,7 +57,7 @@ export default function Footer() {
           <p>&copy; {new Date().getFullYear()} QueueLess. All rights reserved.</p>
           <div className="flex items-center gap-2">
             <span>Made with</span>
-            <span className="text-red-500">❤️</span>
+            <FaHeart className="text-red-500 inline animate-pulse" />
             <span>in Bangladesh</span>
           </div>
         </div>

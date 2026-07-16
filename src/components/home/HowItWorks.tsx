@@ -10,7 +10,7 @@ export default function HowItWorks() {
       description: "Find hospitals, banks, or saloons near you. Use our smart search to locate exactly what you need.",
       icon: <FiSearch className="text-4xl text-blue-600 mb-6 group-hover:scale-110 transition-transform duration-300" />,
       gradient: "border-zinc-200/80 hover:border-blue-300 hover:shadow-blue-900/5",
-      numberColor: "text-zinc-100",
+      numberColor: "text-blue-200",
     },
     {
       id: 2,
@@ -18,7 +18,7 @@ export default function HowItWorks() {
       description: "Select a convenient time slot and book your token instantly. No more standing in physical lines.",
       icon: <FiCalendar className="text-4xl text-emerald-600 mb-6 group-hover:scale-110 transition-transform duration-300" />,
       gradient: "border-zinc-200/80 hover:border-emerald-300 hover:shadow-emerald-900/5",
-      numberColor: "text-zinc-100",
+      numberColor: "text-emerald-200",
     },
     {
       id: 3,
@@ -26,7 +26,7 @@ export default function HowItWorks() {
       description: "Monitor the queue in real-time from your dashboard. Know exactly when it's your turn to be served.",
       icon: <FiClock className="text-4xl text-purple-600 mb-6 group-hover:scale-110 transition-transform duration-300" />,
       gradient: "border-zinc-200/80 hover:border-purple-300 hover:shadow-purple-900/5",
-      numberColor: "text-zinc-100",
+      numberColor: "text-purple-200",
     },
     {
       id: 4,
@@ -34,7 +34,7 @@ export default function HowItWorks() {
       description: "Arrive just in time, show your digital token, and get served immediately with zero waiting.",
       icon: <FiCheckCircle className="text-4xl text-rose-600 mb-6 group-hover:scale-110 transition-transform duration-300" />,
       gradient: "border-zinc-200/80 hover:border-rose-300 hover:shadow-rose-900/5",
-      numberColor: "text-zinc-100",
+      numberColor: "text-rose-200",
     },
   ];
 
@@ -72,7 +72,7 @@ export default function HowItWorks() {
               className={`relative group bg-white border ${step.gradient} rounded-3xl p-8 text-left transition-all duration-500 hover:-translate-y-3 hover:shadow-xl overflow-hidden cursor-default`}
             >
               {/* Background Large Number */}
-              <div className={`absolute -right-2 -bottom-6 text-9xl font-black opacity-60 transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-12 ${step.numberColor} z-0`}>
+              <div className={`absolute -right-2 -bottom-6 text-9xl font-black transition-transform duration-700 group-hover:scale-110 group-hover:-rotate-12 ${step.numberColor} z-0`}>
                 {step.id}
               </div>
 
