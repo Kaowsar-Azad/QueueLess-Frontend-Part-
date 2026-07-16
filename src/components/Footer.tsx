@@ -32,23 +32,38 @@ export default function Footer() {
             </div>
           </div>
           
-          <div className="col-span-1 md:col-span-6 lg:col-span-3 lg:col-start-8">
-            <h3 className="text-white font-semibold text-lg mb-6">Quick Links</h3>
-            <ul className="space-y-4">
-              <li><Link href="/" className="hover:text-blue-400 transition-colors">Home</Link></li>
-              <li><Link href="/explore" className="hover:text-blue-400 transition-colors">Explore Services</Link></li>
-              <li><Link href="/about" className="hover:text-blue-400 transition-colors">About Us</Link></li>
-              <li><Link href="/contact" className="hover:text-blue-400 transition-colors">Contact</Link></li>
-            </ul>
-          </div>
-
-          {/* Legal */}
-          <div className="col-span-1 md:col-span-6 lg:col-span-2">
-            <h3 className="text-white font-semibold text-lg mb-6">Legal</h3>
-            <ul className="space-y-4">
-              <li><Link href="/" className="hover:text-blue-400 transition-colors">Terms of Service</Link></li>
-              <li><Link href="/" className="hover:text-blue-400 transition-colors">Privacy Policy</Link></li>
-            </ul>
+          <div className="col-span-1 md:col-span-12 lg:col-span-6 lg:flex lg:justify-end lg:items-start">
+            <div className="w-full max-w-sm">
+              <h3 className="text-white font-extrabold text-sm mb-6 tracking-widest uppercase border-b border-zinc-800 pb-3 block">
+                Quick Links
+              </h3>
+              <ul className="grid grid-cols-2 gap-x-8 gap-y-4">
+                <li>
+                  <Link href="/" className="group flex items-center gap-2.5 text-zinc-400 hover:text-white transition-all py-1.5 text-base font-medium">
+                    <span className="w-2 h-2 rounded-full bg-blue-500 group-hover:ring-4 group-hover:ring-blue-500/20 transition-all duration-300"></span>
+                    <span>Home</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/explore" className="group flex items-center gap-2.5 text-zinc-400 hover:text-white transition-all py-1.5 text-base font-medium">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 group-hover:ring-4 group-hover:ring-emerald-500/20 transition-all duration-300"></span>
+                    <span>Explore Services</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/about" className="group flex items-center gap-2.5 text-zinc-400 hover:text-white transition-all py-1.5 text-base font-medium">
+                    <span className="w-2 h-2 rounded-full bg-purple-500 group-hover:ring-4 group-hover:ring-purple-500/20 transition-all duration-300"></span>
+                    <span>About Us</span>
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="group flex items-center gap-2.5 text-zinc-400 hover:text-white transition-all py-1.5 text-base font-medium">
+                    <span className="w-2 h-2 rounded-full bg-rose-500 group-hover:ring-4 group-hover:ring-rose-500/20 transition-all duration-300"></span>
+                    <span>Contact</span>
+                  </Link>
+                </li>
+              </ul>
+            </div>
           </div>
           
         </div>
