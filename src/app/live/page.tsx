@@ -150,7 +150,7 @@ export default function LiveStatusPage() {
             </div>
             <h2 className="text-xl font-bold text-zinc-800">No Active Tickets</h2>
             <p className="text-zinc-500 max-w-sm mx-auto mt-2 font-medium">
-              You do not have any active bookings right now. Find a service and book a token to track it here.
+              You do not have any active tokens right now. Find a service and reserve a token to track it here.
             </p>
             <Link
               href="/explore"
@@ -163,7 +163,7 @@ export default function LiveStatusPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {bookings.map((booking) => {
               const current = booking.serviceId?.currentQueue || 0;
-              const diff = booking.tokenNumber - current - 1;
+              const diff = booking.tokenNumber - current;
               const peopleAhead = diff > 0 ? diff : 0;
 
               return (
