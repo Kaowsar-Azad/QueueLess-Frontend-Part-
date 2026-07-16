@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { FiClock, FiXCircle, FiActivity } from "react-icons/fi";
 import { calculateWaitMetrics } from "@/lib/queueUtils";
+import { formatTime } from "@/lib/timeUtils";
 
 interface Booking {
   _id: string;
@@ -148,7 +149,7 @@ export default function UserDashboard() {
 
                         <div className="flex flex-col gap-2 pt-2 border-t border-zinc-100 text-xs font-semibold text-zinc-500">
                           <span className="flex items-center gap-1.5">
-                            <FiClock /> {ticket.serviceId?.startHour} - {ticket.serviceId?.endHour}
+                            <FiClock /> {formatTime(ticket.serviceId?.startHour)} - {formatTime(ticket.serviceId?.endHour)}
                           </span>
                           <span className="flex items-center gap-1.5 text-blue-600">
                             <FiActivity /> Serving Token: #{ticket.serviceId?.currentQueue || 0}

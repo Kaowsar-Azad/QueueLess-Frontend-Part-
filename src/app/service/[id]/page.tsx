@@ -10,6 +10,7 @@ import {
   FiStar, FiShield, FiPhone, FiInfo, FiArrowRight, FiSend,
   FiActivity
 } from "react-icons/fi";
+import { formatTime } from "@/lib/timeUtils";
 
 interface Service {
   _id: string;
@@ -302,7 +303,7 @@ export default function ServiceDetailsPage() {
                   </div>
                   <div className="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl">
                     <FiClock className="text-blue-500 flex-shrink-0" />
-                    <span>Working Hours: {service.startHour} - {service.endHour}</span>
+                    <span>Working Hours: {formatTime(service.startHour)} - {formatTime(service.endHour)}</span>
                   </div>
                   <div className="flex items-center gap-2 p-3 bg-zinc-50 rounded-xl">
                     <FiShield className="text-blue-500 flex-shrink-0" />
@@ -385,7 +386,7 @@ export default function ServiceDetailsPage() {
                     >
                       <div>
                         <h4 className="font-bold text-zinc-800 text-sm group-hover:text-blue-600 transition-colors">{rs.name}</h4>
-                        <p className="text-zinc-400 text-xs mt-1">{rs.startHour} - {rs.endHour} • {Math.max(0, rs.maxTokens - rs.totalTokens)} Slots Available</p>
+                        <p className="text-zinc-400 text-xs mt-1">{formatTime(rs.startHour)} - {formatTime(rs.endHour)} • {Math.max(0, rs.maxTokens - rs.totalTokens)} Slots Available</p>
                       </div>
                       <FiArrowRight className="text-zinc-400 group-hover:translate-x-1 group-hover:text-blue-600 transition-all" />
                     </Link>

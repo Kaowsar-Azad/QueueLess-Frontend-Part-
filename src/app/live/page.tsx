@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useSession } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import Link from "next/link";
-import { FiClock, FiActivity, FiRefreshCw, FiAlertCircle } from "react-icons/fi";
+import { FiClock, FiActivity, FiRefreshCw, FiAlertCircle, FiCheckCircle, FiMapPin } from "react-icons/fi";
 
 interface Booking {
   _id: string;
@@ -17,6 +17,9 @@ interface Booking {
     category: string;
     currentQueue: number;
     averageTimePerToken?: number;
+    image?: string;
+    images?: string[];
+    address?: string;
   };
 }
 
@@ -165,57 +168,90 @@ export default function LiveStatusPage() {
               const current = booking.serviceId?.currentQueue || 0;
               const diff = booking.tokenNumber - current;
               const peopleAhead = diff > 0 ? diff : 0;
+              const userName = session?.user?.name?.split(' ')[0] || 'there';
+
+              const imgUrl = booking.serviceId?.images?.[0] || booking.serviceId?.image || "https://placehold.co/600x400?text=Queue+Tracker";
 
               return (
                 <div
                   key={booking._id}
-                  className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm p-8 relative overflow-hidden"
+                  className={`bg-white rounded-3xl shadow-lg relative overflow-hidden group flex flex-col transition-all ${
+                    booking.tokenNumber <= current 
+                      ? "border-2 border-emerald-500 ring-4 ring-emerald-500/20 shadow-emerald-500/20" 
+                      : "border border-zinc-200/80 shadow-blue-900/5"
+                  }`}
                 >
-                  {/* Category badge */}
-                  <span className="inline-block text-[10px] bg-blue-50 text-blue-700 font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-4">
-                    {booking.serviceId?.category}
-                  </span>
-
-                  <h3 className="text-xl font-black text-zinc-950 truncate mb-6">
-                    {booking.serviceId?.name}
-                  </h3>
-
-                  <div className="grid grid-cols-2 gap-4 mb-6 border-b border-zinc-100 pb-6">
-                    <div className="bg-zinc-50 p-4 rounded-2xl text-center border border-zinc-100">
-                      <span className="text-xs font-bold text-zinc-400 uppercase">Your Token</span>
-                      <p className="text-3xl font-black text-blue-600 mt-1">#{booking.tokenNumber}</p>
-                    </div>
-
-                    <div className="bg-zinc-50 p-4 rounded-2xl text-center border border-zinc-100">
-                      <span className="text-xs font-bold text-zinc-400 uppercase">Now Serving</span>
-                      <p className="text-3xl font-black text-zinc-800 mt-1">#{current}</p>
+                  {/* Image Header */}
+                  <div className="h-40 w-full bg-zinc-100 relative shrink-0">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={imgUrl} alt={booking.serviceId?.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-zinc-900/90 via-zinc-900/40 to-transparent"></div>
+                    
+                    <span className="absolute top-4 left-4 inline-block text-[10px] bg-white/95 text-blue-700 font-extrabold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                      {booking.serviceId?.category}
+                    </span>
+                    
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <h3 className="text-2xl font-black text-white truncate shadow-sm mb-1">
+                        {booking.serviceId?.name}
+                      </h3>
+                      {booking.serviceId?.address && (
+                        <p className="text-white/80 text-xs font-medium flex items-center gap-1">
+                          <FiMapPin /> {booking.serviceId.address}
+                        </p>
+                      )}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4">
-                    <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center animate-pulse">
-                      <FiActivity className="text-xl" />
+                  <div className="p-6 flex flex-col flex-1">
+                    {/* Status Banner */}
+                    <div className={`mb-6 p-4 rounded-2xl flex items-center gap-4 ${
+                        booking.tokenNumber <= current 
+                          ? "bg-emerald-500 text-white shadow-md shadow-emerald-500/20" 
+                          : peopleAhead === 0 
+                            ? "bg-blue-600 text-white shadow-md shadow-blue-600/20" 
+                            : "bg-blue-50 text-blue-900 border border-blue-100"
+                      }`}>
+                      <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${
+                        booking.tokenNumber <= current || peopleAhead === 0 ? "bg-white/20 text-white" : "bg-blue-100 text-blue-600"
+                      }`}>
+                        {booking.tokenNumber <= current ? <FiCheckCircle className="text-2xl" /> : <FiActivity className="text-2xl animate-pulse" />}
+                      </div>
+                      <div>
+                        {booking.tokenNumber <= current ? (
+                          <>
+                            <p className="font-black text-lg">Hey {userName}, it&apos;s your turn!</p>
+                            <p className="text-sm opacity-90 font-medium">Please proceed to the service counter immediately.</p>
+                          </>
+                        ) : peopleAhead === 0 ? (
+                          <>
+                            <p className="font-black text-lg">Hey {userName}, you are Next!</p>
+                            <p className="text-sm opacity-90 font-medium">Get ready, you&apos;re up next.</p>
+                          </>
+                        ) : (
+                          <>
+                            <p className="font-black text-lg">Waiting in Queue, {userName}</p>
+                            <p className="text-sm opacity-90 font-medium">
+                              {peopleAhead} people ahead • ~{peopleAhead * (booking.serviceId?.averageTimePerToken || 20)} mins wait
+                            </p>
+                          </>
+                        )}
+                      </div>
                     </div>
 
-                    <div>
-                      {booking.tokenNumber <= current ? (
-                        <>
-                          <p className="font-black text-emerald-600 text-sm">It&apos;s your turn!</p>
-                          <p className="text-xs text-zinc-500 font-medium">Please proceed to the counter.</p>
-                        </>
-                      ) : peopleAhead === 0 ? (
-                        <>
-                          <p className="font-black text-blue-600 text-sm">You are next in line!</p>
-                          <p className="text-xs text-zinc-500 font-medium">Get ready, you&apos;re up next.</p>
-                        </>
-                      ) : (
-                        <>
-                          <p className="font-black text-zinc-800 text-sm">{peopleAhead} people ahead</p>
-                          <p className="text-xs text-zinc-500 font-medium">
-                            Estimated wait: ~{peopleAhead * (booking.serviceId?.averageTimePerToken || 20)} mins
-                          </p>
-                        </>
-                      )}
+                    {/* Tokens Grid */}
+                    <div className="grid grid-cols-2 gap-4 mt-auto border-t border-zinc-100 pt-6">
+                      <div className="bg-zinc-50 p-4 rounded-2xl text-center border border-zinc-100 relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-zinc-200"></div>
+                        <span className="text-[10px] font-extrabold text-zinc-500 uppercase tracking-wider">Now Serving</span>
+                        <p className="text-3xl font-black text-zinc-800 mt-2">#{current}</p>
+                      </div>
+
+                      <div className="bg-blue-50 p-4 rounded-2xl text-center border border-blue-100 relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
+                        <span className="text-[10px] font-extrabold text-blue-600 uppercase tracking-wider">Your Token</span>
+                        <p className="text-3xl font-black text-blue-700 mt-2">#{booking.tokenNumber}</p>
+                      </div>
                     </div>
                   </div>
                 </div>

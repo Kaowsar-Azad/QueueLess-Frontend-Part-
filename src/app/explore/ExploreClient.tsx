@@ -6,6 +6,7 @@ import { useSearchParams } from "next/navigation";
 import { toast } from "react-toastify";
 import { FiSearch, FiTag, FiClock, FiUsers, FiArrowRight } from "react-icons/fi";
 import { calculateWaitMetrics } from "@/lib/queueUtils";
+import { formatTime } from "@/lib/timeUtils";
 
 interface Service {
   _id: string;
@@ -230,7 +231,7 @@ export default function ExploreClient() {
                     {/* Timings and limit */}
                     <div className="flex justify-between text-xs font-semibold text-zinc-500">
                       <span className="flex items-center gap-1.5">
-                        <FiClock /> {service.startHour} - {service.endHour}
+                        <FiClock /> {formatTime(service.startHour)} - {formatTime(service.endHour)}
                       </span>
                       <span className="flex items-center gap-1.5">
                         <FiUsers /> Available: {Math.max(0, service.maxTokens - service.totalTokens)} tokens

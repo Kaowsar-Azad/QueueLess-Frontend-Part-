@@ -5,6 +5,7 @@ import { useSession } from "@/lib/auth-client";
 import { toast } from "react-toastify";
 import Link from "next/link";
 import { FiArrowLeft, FiTrash2, FiClock, FiUsers, FiTag } from "react-icons/fi";
+import { formatTime } from "@/lib/timeUtils";
 
 interface Service {
   _id: string;
@@ -129,7 +130,7 @@ export default function ManageServicesPage() {
                     
                     <div className="flex flex-wrap gap-4 text-xs font-semibold text-zinc-500 pt-1">
                       <span className="flex items-center gap-1">
-                        <FiClock /> {service.startHour} - {service.endHour}
+                        <FiClock /> {formatTime(service.startHour)} - {formatTime(service.endHour)}
                       </span>
                       <span className="flex items-center gap-1">
                         <FiUsers /> Limit: {service.maxTokens} tokens
