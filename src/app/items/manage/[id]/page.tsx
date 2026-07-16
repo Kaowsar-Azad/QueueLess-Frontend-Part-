@@ -190,7 +190,17 @@ export default function ServiceBookingsPage({ params }: PageProps) {
 
         {/* Active Queue / Pending Bookings */}
         <div className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm p-8 mb-8">
-          <h2 className="text-2xl font-black text-zinc-900 mb-6">Active Queue</h2>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
+            <h2 className="text-2xl font-black text-zinc-900">Active Queue</h2>
+            {pendingBookings.length > 0 && (
+              <button
+                onClick={() => handleUpdateStatus(pendingBookings[0]._id, "served")}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-bold px-5 py-2.5 rounded-xl transition-all shadow-md shadow-blue-600/20 flex items-center gap-2 text-xs uppercase tracking-wider"
+              >
+                <FiActivity className="text-sm" /> Call Next Customer (#{pendingBookings[0].tokenNumber})
+              </button>
+            )}
+          </div>
 
           {pendingBookings.length === 0 ? (
             <div className="text-center py-12 bg-zinc-50 rounded-2xl border border-dashed border-zinc-200">

@@ -16,6 +16,7 @@ interface Booking {
     name: string;
     category: string;
     currentQueue: number;
+    averageTimePerToken?: number;
   };
 }
 
@@ -210,7 +211,9 @@ export default function LiveStatusPage() {
                       ) : (
                         <>
                           <p className="font-black text-zinc-800 text-sm">{peopleAhead} people ahead</p>
-                          <p className="text-xs text-zinc-500 font-medium">Estimated wait: ~{peopleAhead * 5} mins</p>
+                          <p className="text-xs text-zinc-500 font-medium">
+                            Estimated wait: ~{peopleAhead * (booking.serviceId?.averageTimePerToken || 20)} mins
+                          </p>
                         </>
                       )}
                     </div>

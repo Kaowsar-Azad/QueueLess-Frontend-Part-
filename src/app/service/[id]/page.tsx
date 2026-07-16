@@ -7,7 +7,8 @@ import { toast } from "react-toastify";
 import Link from "next/link";
 import { 
   FiArrowLeft, FiClock, FiMapPin, FiCalendar, 
-  FiStar, FiShield, FiPhone, FiInfo, FiArrowRight, FiSend 
+  FiStar, FiShield, FiPhone, FiInfo, FiArrowRight, FiSend,
+  FiActivity
 } from "react-icons/fi";
 
 interface Service {
@@ -20,11 +21,20 @@ interface Service {
   maxTokens: number;
   currentQueue: number;
   totalTokens: number;
+  averageTimePerToken?: number;
   ownerId?: string;
   image?: string;
   images?: string[];
   address?: string;
   contactNumber?: string;
+}
+
+interface Booking {
+  _id: string;
+  tokenNumber: number;
+  status: "pending" | "served" | "cancelled";
+  createdAt: string;
+  serviceId: string | Service;
 }
 
 interface Review {
@@ -47,6 +57,7 @@ export default function ServiceDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [bookingLoading, setBookingLoading] = useState(false);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
+  const [activeBooking, setActiveBooking] = useState<Booking | null>(null);
 
   // Review form state
   const [newRating, setNewRating] = useState(5);
@@ -87,6 +98,19 @@ export default function ServiceDetailsPage() {
           setRelatedServices(filtered);
         }
 
+        // Fetch user's active booking for this service
+        if (session?.user?.id) {
+          const bookingsRes = await fetch(
+            `/api/bookings?userId=${session.user.id}&serviceId=${id}`,
+            { credentials: "include" }
+          );
+          if (bookingsRes.ok) {
+            const bookingsData: Booking[] = await bookingsRes.json();
+            const active = bookingsData.find(b => b.status === "pending");
+            setActiveBooking(active || null);
+          }
+        }
+
       } catch (error: unknown) {
         toast.error((error as Error).message || "Failed to load details");
       } finally {
@@ -99,7 +123,7 @@ export default function ServiceDetailsPage() {
       const interval = setInterval(fetchServiceDetailsAndRelated, 5000);
       return () => clearInterval(interval);
     }
-  }, [id]);
+  }, [id, session?.user?.id]);
 
   const handleSubmitReview = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -140,7 +164,7 @@ export default function ServiceDetailsPage() {
 
   const handleBookToken = async () => {
     if (!session?.user) {
-      toast.error("Please login to book a token.");
+      toast.error("Please login to reserve a token.");
       router.push("/login");
       return;
     }
@@ -167,10 +191,12 @@ export default function ServiceDetailsPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || "Failed to book token");
+        throw new Error(data.error || "Failed to reserve token");
       }
 
-      toast.success(`Token booked successfully! Your Token Number is #${data.tokenNumber}`);
+      toast.success(`Token reserved successfully! Your Token Number is #${data.tokenNumber}`);
+      
+      setActiveBooking(data);
       
       if (service) {
         setService({
@@ -178,10 +204,8 @@ export default function ServiceDetailsPage() {
           totalTokens: service.totalTokens + 1
         });
       }
-      
-      router.push("/dashboard/user");
     } catch (error: unknown) {
-      toast.error((error as Error).message || "Failed to book token");
+      toast.error((error as Error).message || "Failed to reserve token");
     } finally {
       setBookingLoading(false);
     }
@@ -378,32 +402,85 @@ export default function ServiceDetailsPage() {
               <div className="bg-white rounded-3xl border border-zinc-200/80 shadow-sm p-6 text-center sticky top-24">
                 <h3 className="text-lg font-bold text-zinc-800 border-b border-zinc-100 pb-3 mb-6">Live Queue Tracker</h3>
                 
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl">
-                    <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wider">Serving Token</p>
-                    <p className="text-3xl font-extrabold text-blue-900 mt-1">#{service.currentQueue || 0}</p>
+                {activeBooking ? (
+                  <div className="space-y-4 text-left">
+                    <div className="bg-emerald-50 border border-emerald-100 p-4 rounded-2xl">
+                      <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-wider">Queue Status</p>
+                      {activeBooking.tokenNumber <= (service.currentQueue || 0) ? (
+                        <p className="font-extrabold text-emerald-800 mt-1 text-sm">It&apos;s your turn! Proceed to the counter.</p>
+                      ) : activeBooking.tokenNumber - (service.currentQueue || 0) === 1 ? (
+                        <p className="font-extrabold text-blue-800 mt-1 text-sm">You are next in line! Get ready.</p>
+                      ) : (
+                        <p className="font-extrabold text-zinc-700 mt-1 text-sm">Waiting in Queue</p>
+                      )}
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl text-center">
+                        <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wider">Now Serving</p>
+                        <p className="text-2xl font-extrabold text-blue-900 mt-1">#{service.currentQueue || 0}</p>
+                      </div>
+
+                      <div className="bg-zinc-50 border border-zinc-100 p-4 rounded-2xl text-center">
+                        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Your Token</p>
+                        <p className="text-2xl font-extrabold text-zinc-800 mt-1">#{activeBooking.tokenNumber}</p>
+                      </div>
+                    </div>
+
+                    <div className="bg-zinc-50 border border-zinc-100 p-4 rounded-2xl space-y-2">
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-zinc-500 font-medium">People Ahead:</span>
+                        <span className="font-bold text-zinc-800">
+                          {Math.max(0, activeBooking.tokenNumber - (service.currentQueue || 0))}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-zinc-500 font-medium">Estimated Wait:</span>
+                        <span className="font-bold text-zinc-800">
+                          {Math.max(0, activeBooking.tokenNumber - (service.currentQueue || 0)) * (service.averageTimePerToken || 20)} mins
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center text-xs">
+                        <span className="text-zinc-500 font-medium">Service Time:</span>
+                        <span className="font-bold text-zinc-800">{service.averageTimePerToken || 20} mins/person</span>
+                      </div>
+                    </div>
+
+                    <button
+                      onClick={() => router.push("/live")}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-all shadow-md flex items-center justify-center gap-2 text-sm"
+                    >
+                      <FiActivity className="text-base" /> Track All Tickets
+                    </button>
                   </div>
+                ) : (
+                  <>
+                    <div className="grid grid-cols-2 gap-4 mb-6">
+                      <div className="bg-blue-50 border border-blue-100 p-4 rounded-2xl">
+                        <p className="text-[10px] font-bold text-blue-500 uppercase tracking-wider">Serving Token</p>
+                        <p className="text-3xl font-extrabold text-blue-900 mt-1">#{service.currentQueue || 0}</p>
+                      </div>
 
-                  <div className="bg-zinc-50 border border-zinc-100 p-4 rounded-2xl">
-                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Available Slots</p>
-                    <p className="text-3xl font-extrabold text-zinc-800 mt-1">{Math.max(0, service.maxTokens - service.totalTokens)}</p>
-                  </div>
-                </div>
+                      <div className="bg-zinc-50 border border-zinc-100 p-4 rounded-2xl">
+                        <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider">Available Slots</p>
+                        <p className="text-3xl font-extrabold text-zinc-800 mt-1">{Math.max(0, service.maxTokens - service.totalTokens)}</p>
+                      </div>
+                    </div>
 
-                <>
-                  <button
-                    onClick={handleBookToken}
-                    disabled={bookingLoading || service.totalTokens >= service.maxTokens}
-                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-md shadow-blue-600/25 disabled:opacity-50 flex items-center justify-center gap-2"
-                  >
-                    <FiCalendar className="text-lg" /> 
-                    {bookingLoading ? "Booking..." : service.totalTokens >= service.maxTokens ? "Queue Full" : "Book Token Now"}
-                  </button>
+                    <button
+                      onClick={handleBookToken}
+                      disabled={bookingLoading || service.totalTokens >= service.maxTokens}
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all shadow-md shadow-blue-600/25 disabled:opacity-50 flex items-center justify-center gap-2"
+                    >
+                      <FiCalendar className="text-lg" /> 
+                      {bookingLoading ? "Reserving..." : service.totalTokens >= service.maxTokens ? "Queue Full" : "Reserve Token"}
+                    </button>
 
-                  <p className="text-[11px] text-zinc-400 mt-3">
-                    Requires login. Valid only for today.
-                  </p>
-                </>
+                    <p className="text-[11px] text-zinc-400 mt-3">
+                      Requires login. Valid only for today.
+                    </p>
+                  </>
+                )}
               </div>
             </div>
           )}
